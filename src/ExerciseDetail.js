@@ -4,26 +4,26 @@ import SetDetail from './SetDetail'
 class ExerciseDetail extends React.Component {
   constructor(props) {
     super(props);
-    this.handleShowSetsButtonClick = this.handleShowSetsButtonClick.bind(this);
+    this.handleClick = this.handleClick.bind(this);
     this.state = {
-      showSets: false
+      show: false
     };
   }
 
-  handleShowSetsButtonClick() {
+  handleClick() {
     this.setState((state, props) => ({
-      showSets: !state.showSets
+      show: !state.show
     }));
   }
 
   render() {
     return (
-      <div>
-        <p>
+      <div onClick={this.state.show ? null : this.handleClick}>
+        <p onClick={this.state.show ? this.handleClick : null}>
           {this.props.name}
-          <button onClick={this.handleShowSetsButtonClick}>Show Sets</button>
+          <button className={this.state.show ? 'toggled' : ''}>{(this.state.show ? "Hide" : "Show") + ' Sets'} </button>
         </p>
-        {this.state.showSets && <ul>
+        {this.state.show && <ul>
           {this.props.sets.map((s, i) => <li key={i}><SetDetail weight={s.weight} reps={s.reps} /></li>)}
         </ul>}
       </div>
