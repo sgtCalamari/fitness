@@ -5,7 +5,8 @@ const uri = process.env.MONGO_URI;
 
 const options = {
   useNewUrlParser: true,
-  useUnifiedTopology: true
+  useUnifiedTopology: true,
+  dbName: process.env.DB_NAME || 'fitness'
 };
 mongoose.connect(uri, options);
 const connection = mongoose.connection;

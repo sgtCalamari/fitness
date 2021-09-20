@@ -15,6 +15,7 @@ app.use(express.urlencoded({extended: true}));
 // app routes
 app.use('/users', routes.users);
 app.use('/workouts', routes.workouts);
+app.use('/muscleGroups', routes.muscleGroups);
 
 app.listen(port, () => {
   console.log(`Node Express server for ${displayName} listening at http://localhost:${port}`);

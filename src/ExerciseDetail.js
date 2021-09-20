@@ -19,10 +19,14 @@ class ExerciseDetail extends React.Component {
   render() {
     return (
       <div onClick={this.state.show ? null : this.handleClick}>
-        <p onClick={this.state.show ? this.handleClick : null}>
-          {this.props.name}
-          <button className={this.state.show ? 'toggled' : ''}>{(this.state.show ? "Hide" : "Show") + ' Sets'} </button>
-        </p>
+        <div
+          className='d-flex align-items-center justify-content-between'
+          onClick={this.state.show ? this.handleClick : null}>
+          <p>{this.props.name}</p>
+          <button className={'btn btn-sm me-1 '+(this.state.show?'btn-secondary':'btn-primary')}>
+            {(this.state.show ? "Hide" : "Show") + ' Sets'}
+          </button>
+        </div>
         {this.state.show && <ul>
           {this.props.sets.map((s, i) => <li key={i}><SetDetail weight={s.weight} reps={s.reps} /></li>)}
         </ul>}
