@@ -10,19 +10,17 @@ router.get('/', (req, res) => {
 router.post('/add', (req, res) => {
   const username = req.body.username;
   const date = Date.parse(req.body.date) || new Date();
-  const muscleGroups = req.body.muscleGroups;
   const exercises = req.body.exercises;
   const newWorkout = new Workout({
     username,
     date,
-    muscleGroups,
     exercises
   }).save().then(() => res.json('Workout added!'))
     .catch(err => res.status(400).json('Error: ' + err));
 });
 
-router.get('/:id', (req, res) => {
-  Workout.findById(req.params.id)
+router.get('/:username', (req, res) => {
+  Workout.find({username: req.params.username})
     .then(w => res.json(w))
     .catch(err => res.status(400).json('Error: ' + err));
 });

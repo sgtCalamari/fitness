@@ -1,4 +1,4 @@
-import WorkoutSummary from './WorkoutSummary';
+import WorkoutSummary from './components/WorkoutSummary';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
 
@@ -11,50 +11,50 @@ function App() {
 }
 
 const WORKOUTS = [
-  {date: new Date('2021-08-31'), muscleGroups: ['chest', 'shoulder'], exercises: [
-    {name: 'pectoral fly', sets: [
-      {weight: 107, reps: 12},
-      {weight: 120, reps: 12},
-      {weight: 120, reps: 12},
-      {weight: 120, reps: 12}
+  {"username": 'joe', "date": new Date('2021-08-31'), "isWithTrainer": false, "location": null, "exercises": [
+    {"name": 'pectoral fly', "musclegroups": ['chest'], "sets": [
+      {"weight": 107, "reps": 12},
+      {"weight": 120, "reps": 12},
+      {"weight": 120, "reps": 12},
+      {"weight": 120, "reps": 12}
     ]},
-    {name: 'chest press', sets: [
-      {weight: 90, reps: 12},
-      {weight: 100, reps: 12},
-      {weight: 100, reps: 12},
-      {weight: 100, reps: 10}
+    {"name": 'chest press', "musclegroups": ['chest'], "sets": [
+      {"weight": 90, "reps": 12},
+      {"weight": 100, "reps": 12},
+      {"weight": 100, "reps": 12},
+      {"weight": 100, "reps": 10}
     ]},
-    {name: 'shoulder press', sets: [
-      {weight: 80, reps: 12},
-      {weight: 90, reps: 10},
-      {weight: 80, reps: 12},
-      {weight: 80, reps: 12}
+    {"name": 'shoulder press', "musclegroups": ['shoulders'], "sets": [
+      {"weight": 80, "reps": 12},
+      {"weight": 90, "reps": 10},
+      {"weight": 80, "reps": 12},
+      {"weight": 80, "reps": 12}
     ]}
   ]},
-  {date: new Date('2021-09-02'), muscleGroups: ['quads', 'abs'], exercises: [
-    {name: 'leg press', sets: [
-      {weight: 200, reps: 12},
-      {weight: 220, reps: 12},
-      {weight: 220, reps: 12},
-      {weight: 220, reps: 12},
-      {weight: 220, reps: 12}
+  {"username": 'joe', "date": new Date('2021-09-02'), "isWithTrainer": false, "location": null, "exercises": [
+    {"name": 'leg press', "musclegroups": ['quads'], "sets": [
+      {"weight": 200, "reps": 12},
+      {"weight": 220, "reps": 12},
+      {"weight": 220, "reps": 12},
+      {"weight": 220, "reps": 12},
+      {"weight": 220, "reps": 12}
     ]},
-    {name: 'squats', sets: [
-      {weight: 140, reps: 12},
-      {weight: 140, reps: 12},
-      {weight: 140, reps: 12},
-      {weight: 140, reps: 10},
+    {"name": 'squats', "musclegroups": ['quads', 'glutes'], "sets": [
+      {"weight": 140, "reps": 12},
+      {"weight": 140, "reps": 12},
+      {"weight": 140, "reps": 12},
+      {"weight": 140, "reps": 10},
     ]},
-    {name: 'bosu tips', sets: [
-      {reps: 30},
-      {reps: 30},
-      {reps: 30},
-      {reps: 30}
+    {"name": 'bosu tips', "musclegroups": ['abs'], "sets": [
+      {"reps": 30},
+      {"reps": 30},
+      {"reps": 30},
+      {"reps": 30}
     ]}
   ]},
-  {date: new Date('2021-09-03'), muscleGroups: ['biceps','triceps'], exercises: [
-    {name: 'bicep curl', sets: [
-      {weight: 100, reps: 1}
+  {"username": 'joe', "date": new Date('2021-09-03'), "isWithTrainer": false, "location": null, exercises: [
+    {"name": 'bicep curl', "musclegroups": ['biceps'], "sets": [
+      {"weight": 100, "reps": 1}
     ]}
   ]}
 ];

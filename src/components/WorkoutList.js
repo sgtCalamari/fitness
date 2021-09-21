@@ -6,10 +6,17 @@ class WorkoutList extends React.Component {
     return <div className='accordion'>
       {this.props.workouts.map((w) => {
         const date = w.date.toUTCString().slice(0, 16);
-        const muscleGroups = w.muscleGroups;
+        const location = w.location;
         const exercises = w.exercises;
-        return <div key={date} className="accordion-item">
-          <WorkoutDetail className="accordion-header" date={date} muscleGroups={muscleGroups} exercises={exercises} /></div>;
+        return (
+          <div key={date} className="accordion-item">
+            <WorkoutDetail
+              className="accordion-header"
+              date={date}
+              location={location}
+              exercises={exercises} />
+          </div>
+        );
       })}
     </div>;
   }
