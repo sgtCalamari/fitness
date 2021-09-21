@@ -21,8 +21,7 @@ class Navbar extends React.Component {
     const showNav = this.state.showNav;
     const paths = [
       {path: '/', text: 'Workouts'},
-      {path: '/create', text: 'Log Workout'},
-      {path: '/user', text: 'New User'}
+      {path: '/log', text: 'Log Workout'}
     ];
     const navbarContentClass = (showNav ? '' : 'hide') + ' navbar-collapse';
     return (

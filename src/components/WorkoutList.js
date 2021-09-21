@@ -3,8 +3,9 @@ import WorkoutDetail from './WorkoutDetail'
 
 class WorkoutList extends React.Component {
   render() {
+    const workouts = this.props.workouts ?? [];
     return <div className='accordion'>
-      {this.props.workouts.map((w) => {
+      {workouts.map((w) => {
         const date = w.date.toUTCString().slice(0, 16);
         const location = w.location;
         const exercises = w.exercises;

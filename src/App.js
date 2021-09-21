@@ -2,6 +2,7 @@ import { BrowserRouter as Router, Route } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 import WorkoutSummary from './components/WorkoutSummary';
+import CreateWorkout from './components/CreateWorkout';
 import Navbar from './components/Navbar';
 
 function App() {
@@ -10,6 +11,7 @@ function App() {
       <div className="container">
         <Navbar />
         <Route path='/' exact><WorkoutSummary workouts={WORKOUTS} /></Route>
+        <Route path='/log'><CreateWorkout /></Route>
       </div>
     </Router>
   );

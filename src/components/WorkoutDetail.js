@@ -1,5 +1,5 @@
 import React from 'react';
-import ExerciseDetail from './ExerciseDetail'
+import ExerciseList from './ExerciseList'
 
 class WorkoutDetail extends React.Component {
   constructor(props) {
@@ -14,13 +14,6 @@ class WorkoutDetail extends React.Component {
     this.setState((state) => ({
       show: !state.show
     }));
-  }
-
-  formatExercises(exercises) {
-    return(exercises.map((e) =>
-      <li key={e.name}>
-        <ExerciseDetail name={e.name} musclegroups={e.musclegroups} sets={e.sets} />
-      </li>));
   }
 
   render() {
@@ -51,7 +44,7 @@ class WorkoutDetail extends React.Component {
           </p>
           <button className={buttonClass}>{buttonText}</button>
         </div>
-        {showDiv && <ul>{this.formatExercises(exercises)}</ul>}
+        {showDiv && <ExerciseList exercises={exercises} />}
       </div>
     );
   }

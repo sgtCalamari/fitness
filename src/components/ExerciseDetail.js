@@ -1,5 +1,5 @@
 import React from 'react';
-import SetDetail from './SetDetail'
+import SetList from './SetList'
 
 class ExerciseDetail extends React.Component {
   constructor(props) {
@@ -14,12 +14,6 @@ class ExerciseDetail extends React.Component {
     this.setState((state, props) => ({
       show: !state.show
     }));
-  }
-
-  formatSets(sets) {
-    return (<ul>{sets.map((s, i) =>
-      <li key={i}><SetDetail weight={s.weight} reps={s.reps} /></li>
-    )}</ul>);
   }
 
   render() {
@@ -39,7 +33,7 @@ class ExerciseDetail extends React.Component {
           <p>{name} <b>({muscleGroups})</b></p>
           <button className={buttonClass}>{buttonText}</button>
         </div>
-        {showDiv && this.formatSets(sets)}
+        {showDiv && <SetList sets={sets} />}
       </div>
     );
   }
