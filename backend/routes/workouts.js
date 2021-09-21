@@ -25,12 +25,6 @@ router.get('/:username', (req, res) => {
     .catch(err => res.status(400).json('Error: ' + err));
 });
 
-router.delete('/:id', (req, res) => {
-  Workout.findByIdAndDelete(req.params.id)
-    .then(() => res.json('Workout deleted'))
-    .catch(err => res.status(400).json('Error: ' + err));
-});
-
 router.post('/update/:id', (req, res) => {
   Workout.findById(req.params.id)
     .then(w => {

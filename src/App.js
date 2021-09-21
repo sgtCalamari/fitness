@@ -1,12 +1,17 @@
-import WorkoutSummary from './components/WorkoutSummary';
+import { BrowserRouter as Router, Route } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import './App.css';
+
+import WorkoutSummary from './components/WorkoutSummary';
+import Navbar from './components/Navbar';
 
 function App() {
   return (
-    <div className="App">
-      <WorkoutSummary workouts={WORKOUTS} />
-    </div>
+    <Router>
+      <div className="container">
+        <Navbar />
+        <Route path='/' exact><WorkoutSummary workouts={WORKOUTS} /></Route>
+      </div>
+    </Router>
   );
 }
 
