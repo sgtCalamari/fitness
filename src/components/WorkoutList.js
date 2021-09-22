@@ -1,12 +1,14 @@
 import React from 'react';
-import WorkoutDetail from './WorkoutDetail'
+import moment from 'moment';
+import WorkoutDetail from './WorkoutDetail';
+import './WorkoutList.css';
 
 class WorkoutList extends React.Component {
   render() {
     const workouts = this.props.workouts ?? [];
     return <div className='accordion'>
       {workouts.map((w) => {
-        const date = w.date.toUTCString().slice(0, 16);
+        const date = moment(w.date).format('ddd MMM DD, yyyy');
         const location = w.location;
         const exercises = w.exercises;
         return (

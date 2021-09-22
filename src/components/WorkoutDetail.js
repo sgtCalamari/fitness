@@ -1,5 +1,5 @@
 import React from 'react';
-import ExerciseList from './ExerciseList'
+import ExerciseList from './ExerciseList';
 
 class WorkoutDetail extends React.Component {
   constructor(props) {
@@ -38,9 +38,11 @@ class WorkoutDetail extends React.Component {
       <div onClick={showDiv ? null : this.handleClick}>
         <div className={divClass} onClick={showDiv ? this.handleClick : null}>
           <p className='ms-1 mt-2'>
-            {date}
-            {locationTag}
-            <b className='ms-1'>({muscleGroups})</b>
+            <span className='workoutInfo'>
+              {date}
+              {locationTag}
+              <b className='ms-1'>({muscleGroups})</b>
+            </span>
           </p>
           <button className={buttonClass}>{buttonText}</button>
         </div>

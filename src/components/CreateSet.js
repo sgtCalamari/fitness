@@ -24,7 +24,7 @@ class CreateSet extends React.Component {
     const weight = this.state.weight;
     const reps = this.state.reps;
     if (duration === 0 && (weight === 0 || reps === 0)) {
-      return alert('Please enter either duration or weight/reps');
+      return alert('please enter either duration or weight/reps');
     }
     // configure new set object and add to existing sets
     const newSet = { duration, weight, reps };
@@ -60,8 +60,8 @@ class CreateSet extends React.Component {
       <div className='card me-2'>
         <div className='d-flex align-items-center justify-content-between'>
           <h5 className='card-title'>Add Sets:</h5>
-          <div className='btn btn-small btn-dark mt-1' onClick={this.toggleType}>
-            Toggle Set Type
+          <div className='btn btn-sm btn-dark mt-1' onClick={this.toggleType}>
+            Change Type
           </div>
         </div>
         <div className='card-body'>
@@ -80,9 +80,7 @@ class CreateSet extends React.Component {
                 <input id='reps' type='number' value={reps} onChange={this.handleRepsChange} />
               </div>
             </>}
-            <div className='col-12'>
-              <div className='btn btn-primary btn-sm' onClick={this.handleClick}>+ Add</div>
-            </div>
+            <div className='btn btn-primary btn-sm' onClick={this.handleClick}>+ Add Set</div>
           </div>
           {sets.length > 0 && <div className='card mt-1'>
             <div className='card-body'>

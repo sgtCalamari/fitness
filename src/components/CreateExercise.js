@@ -9,24 +9,23 @@ class CreateExercise extends React.Component {
     this.handleSetsChange = this.handleSetsChange.bind(this);
     this.handleExerciseNameChange = this.handleExerciseNameChange.bind(this);
     this.state = {
-      showList: true,
       name: '',
-      muscleGroups: [],
+      musclegroups: [],
       sets: []
     };
   }
 
   getExerciseTypes() {
     return this.props.exerciseTypes ?? [ // apply defaults if falsy
-      {name: 'pectoral fly', muscleGroups: ['chest']},
-      {name: 'chest press', muscleGroups: ['chest']},
-      {name: 'shoulder press', muscleGroups: ['shoulders']},
-      {name: 'leg press', muscleGroups: ['quads']},
-      {name: 'squats', muscleGroups: ['glutes','quads']},
-      {name: 'bosu tips', muscleGroups: ['abs']},
-      {name: 'bicep curl', muscleGroups: ['biceps']},
-      {name: 'tricep press', muscleGroups: ['triceps']},
-      {name: 'tricep extension', muscleGroups: ['triceps']},
+      {name: 'pectoral fly', musclegroups: ['chest']},
+      {name: 'chest press', musclegroups: ['chest']},
+      {name: 'shoulder press', musclegroups: ['shoulders']},
+      {name: 'leg press', musclegroups: ['quads']},
+      {name: 'squats', musclegroups: ['glutes','quads']},
+      {name: 'bosu tips', musclegroups: ['abs']},
+      {name: 'bicep curl', musclegroups: ['biceps']},
+      {name: 'tricep press', musclegroups: ['triceps']},
+      {name: 'tricep extension', musclegroups: ['triceps']},
     ];
   }
 
@@ -39,23 +38,24 @@ class CreateExercise extends React.Component {
   lookupMuscleGroups(exerciseName) {
     const exerciseTypes = this.getExerciseTypes();
     const match = exerciseTypes?.find(et => et.name === exerciseName);
-    if (match) return match.muscleGroups;
+    if (match) return match.musclegroups;
     return [];
   }
 
   handleClick() {
     // check state variables to make sure configured exercise passes validation
-    const name = this.state.name;
-    const muscleGroups = this.state.muscleGroups;
-    const sets = this.state.sets ?? [];
-    if (sets.length === 0) return alert('please add sets to exercise before adding');
     const existingExercises = this.props.exercises ?? [];
+    const name = this.state.name;
+    const musclegroups = this.state.musclegroups;
+    const sets = this.state.sets ?? [];
+    if (!name) {
+      return alert('please select a workout type');
+    }
+    if (sets.length === 0) {
+      return alert('please add sets to exercise before adding');
+    }
     // configure new exercise object and add to existing exercises
-    const newExercise = {
-      name,
-      muscleGroups,
-      sets
-    };
+    const newExercise = { name, musclegroups, sets };
     this.props.onExercisesChange([...existingExercises, newExercise]);
     this.setState({sets: []});
   }
@@ -68,20 +68,16 @@ class CreateExercise extends React.Component {
     const muscleGroups = this.lookupMuscleGroups(e.target.value);
     this.setState({
       name: e.target.value,
-      muscleGroups: muscleGroups
+      musclegroups: muscleGroups
     });
   }
 
   render() {
-    const defaultExerciseName = this.getExerciseTypes().map(e => e.name).sort()[0];
-    const exerciseName = this.state.name ?? defaultExerciseName;
-    const exercises = this.state.exercises;
-    const showList = this.state.showList ?? false;
-    const muscleGroups = (this.state.muscleGroups?.length > 0)
-      ? this.state.muscleGroups?.sort().join('/')
-      : this.lookupMuscleGroups(defaultExerciseName);
+    const exercises = this.props.exercises;
+    const muscleGroups = this.state.musclegroups?.sort().join('/');
     const formClass = 'row row-cols-lg-auto g-3 align-items-center';
     const buttonClass = 'btn btn-primary btn-sm';
+    const selectValue = this.state.name || 'default';
     const sets = this.state.sets;
     return(
       <div className='card mt-2'>
@@ -92,8 +88,9 @@ class CreateExercise extends React.Component {
               <select
                 className='form-select'
                 id='exerciseName'
-                value={exerciseName}
-                onChange={this.handleExerciseNameChange}>
+                onChange={this.handleExerciseNameChange}
+                value={selectValue}>
+                <option disabled value='default'>-- select an option --</option>
                 {this.formatExerciseTypeOptions(this.getExerciseTypes())}
               </select>
             </div>
@@ -101,10 +98,10 @@ class CreateExercise extends React.Component {
               <input type='text' readOnly disabled value={muscleGroups} />
             </div>
             <CreateSet onSetsChange={this.handleSetsChange} sets={sets} />
-            <div className={buttonClass} onClick={this.handleClick}>+ Add</div>
+            <div className={buttonClass} onClick={this.handleClick}>+ Add Exercise</div>
           </div>
         </div>
-        {showList && <ExerciseList exercises={exercises} />}
+        <ExerciseList exercises={exercises} />
       </div>
     );
   }

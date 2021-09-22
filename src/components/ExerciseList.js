@@ -2,8 +2,8 @@ import React from 'react';
 import ExerciseDetail from './ExerciseDetail'
 
 class ExerciseList extends React.Component {
-  formatExercises(exercises) {
-    return(exercises.map((e) =>
+  formatExercises(ex) {
+    return(ex.map((e) =>
       <li key={e.name}>
         <ExerciseDetail name={e.name} musclegroups={e.musclegroups} sets={e.sets} />
       </li>));

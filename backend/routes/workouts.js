@@ -1,4 +1,5 @@
 const router = require('express').Router();
+const moment = require('moment');
 let Workout = require('../models/workout.model');
 
 router.get('/', (req, res) => {
@@ -9,7 +10,7 @@ router.get('/', (req, res) => {
 
 router.post('/add', (req, res) => {
   const username = req.body.username;
-  const date = Date.parse(req.body.date) || new Date();
+  const date = moment(req.body.date) || moment();
   const exercises = req.body.exercises;
   const newWorkout = new Workout({
     username,
@@ -30,7 +31,7 @@ router.post('/update/:id', (req, res) => {
     .then(w => {
       if (req.body.username) w.username = req.body.username;
       if (req.body.date) w.date = Date.parse(req.body.date);
-      if (req.body.muscleGroups) w.muscleGroups = req.body.muscleGroups;
+      if (req.body.musclegroups) w.musclegroups = req.body.musclegroups;
       if (req.body.exercises) w.exercises = req.body.exercises;
 
       w.save()

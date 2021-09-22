@@ -1,5 +1,5 @@
 import React from 'react';
-import SetList from './SetList'
+import SetList from './SetList';
 
 class ExerciseDetail extends React.Component {
   constructor(props) {
@@ -30,7 +30,7 @@ class ExerciseDetail extends React.Component {
     return (
       <div onClick={showDiv ? null : this.handleClick}>
         <div className={divClass} onClick={showDiv ? this.handleClick : null}>
-          <p>{name} <b>({muscleGroups})</b></p>
+          <p className='exerciseInfo'>{name} <b>({muscleGroups})</b></p>
           <button className={buttonClass}>{buttonText}</button>
         </div>
         {showDiv && <SetList sets={sets} />}
