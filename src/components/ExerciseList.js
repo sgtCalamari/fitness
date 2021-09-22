@@ -11,6 +11,7 @@ class ExerciseList extends React.Component {
 
   render() {
     const exercises = this.props.exercises ?? [];
+    if (exercises.length === 0) return null;
     return (
       <ul>{this.formatExercises(exercises)}</ul>
     );

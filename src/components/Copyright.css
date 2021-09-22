@@ -1,0 +1,14 @@
+small {
+  float: right;
+}
+
+@media (max-width: 1399px) {
+  small {
+    font-size: 0.55em;
+  }
+}
+@media (min-width: 1400px) {
+  small {
+    font-size: 0.75em;
+  }
+}

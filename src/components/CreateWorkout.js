@@ -1,5 +1,6 @@
 import React from 'react';
 import moment from 'moment';
+import axios from 'axios';
 import CreateExercise from './CreateExercise';
 import WorkoutList from './WorkoutList';
 
@@ -28,6 +29,8 @@ class CreateWorkout extends React.Component {
     // configure new workout
     const newWorkout = { username: 'joe', date, location, exercises };
     // submit workout to db
+    axios.post('http://fitapi.joemart.in/workouts/add', newWorkout)
+      .then(result => console.log(result));
     this.setState((state) => ({
       workouts: [...state.workouts, newWorkout],
       exercises: []
@@ -56,11 +59,11 @@ class CreateWorkout extends React.Component {
         <h2>Log Workout</h2>
         <div>
           <div>
-            <label className='form-label'>Name</label>
+            <label className='form-label'>Name:</label>
             <input type='date' className='form-control' id='workoutDate' value={dateValue} onChange={this.handleDateChange} />
           </div>
           <div>
-            <label className='form-label'>Location</label>
+            <label className='form-label'>Location:</label>
             <input type='text' className='form-control' id='workoutLocation' onChange={this.handleChangeLocation} />
           </div>
           <CreateExercise onExercisesChange={this.handleExercisesChange} exercises={exercises} />
@@ -71,7 +74,8 @@ class CreateWorkout extends React.Component {
               onClick={this.handleSubmitWorkout}>+ Add Workout</button>
           </div>
         </div>
-        {workouts.length > 0 && <WorkoutList workouts={workouts} />}
+        {workouts.length > 0 &&
+          <div className='mt-1'><WorkoutList workouts={workouts} /></div>}
       </div>
     );
   }

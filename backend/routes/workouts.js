@@ -11,10 +11,12 @@ router.get('/', (req, res) => {
 router.post('/add', (req, res) => {
   const username = req.body.username;
   const date = moment(req.body.date) || moment();
+  const location = req.body.location;
   const exercises = req.body.exercises;
   const newWorkout = new Workout({
     username,
     date,
+    location,
     exercises
   }).save().then(() => res.json('Workout added!'))
     .catch(err => res.status(400).json('Error: ' + err));

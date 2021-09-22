@@ -33,21 +33,16 @@ class Navbar extends React.Component {
           </button>
           <div className={navbarContentClass} id="navbarContent">
             <ul className='navbar-nav mr-auto'>
-              {formatLinks(paths)}
+              {paths.map(p =>
+                (<li className='navbar-item' key={p.path} onClick={this.handleClick}>
+                  <Link to={p.path} className='nav-link'>{p.text}</Link>
+                </li>))}
             </ul>
           </div>
         </div>
       </nav>
     );
   };
-}
-
-function formatLinks(paths) {
-  return paths.map(p =>
-    <li className='navbar-item' key={p.path}>
-      <Link to={p.path} className='nav-link'>{p.text}</Link>
-    </li>
-  );
 }
 
 export default Navbar;

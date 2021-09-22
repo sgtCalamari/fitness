@@ -5,10 +5,10 @@ class CreateSet extends React.Component {
   constructor(props) {
     super(props);
     this.handleClick = this.handleClick.bind(this);
+    this.handleClear = this.handleClear.bind(this);
     this.handleDurationChange = this.handleDurationChange.bind(this);
     this.handleWeightChange = this.handleWeightChange.bind(this);
     this.handleRepsChange = this.handleRepsChange.bind(this);
-    this.toggleType = this.toggleType.bind(this);
     this.state = {
       duration: 0,
       weight: 0,
@@ -20,15 +20,27 @@ class CreateSet extends React.Component {
   handleClick() {
     // check state variables to make sure configured set passes validation
     const existingSets = this.props.sets ?? [];
+    const isCardio = this.props.isCardio ?? false;
     const duration = this.state.duration;
     const weight = this.state.weight;
     const reps = this.state.reps;
-    if (duration === 0 && (weight === 0 || reps === 0)) {
-      return alert('please enter either duration or weight/reps');
+    if (duration === 0 && isCardio) {
+      return alert('please enter duration');
+    }
+    if (!isCardio && weight === 0 && reps === 0) {
+      return alert('please enter weight and reps');
     }
     // configure new set object and add to existing sets
-    const newSet = { duration, weight, reps };
+    const newSet = isCardio ? { duration } : { weight, reps };
     this.props.onSetsChange([...existingSets, newSet]);
+  }
+
+  handleClear() {
+    this.setState({
+      duration: 0,
+      weight: 0,
+      reps: 0
+    });
   }
 
   handleDurationChange(e) {
@@ -43,50 +55,40 @@ class CreateSet extends React.Component {
     this.setState({ reps: parseFloat(e.target.value) });
   }
 
-  toggleType() {
-    this.setState((state) => ({
-      isCardio: !state.isCardio
-    }));
-  }
-
   render() {
-    const formClass = 'row row-cols-lg-auto g-3 align-items-center';
-    const isCardio = this.state.isCardio;
-    const duration = isNaN(this.state.duration) ? '' : this.state.duration;
-    const weight = isNaN(this.state.weight) ? '' : this.state.weight;
-    const reps = isNaN(this.state.reps) ? '' : this.state.reps;
+    const formClass = 'row row-cols-lg-auto g-3 align-items-end';
+    const clearBtnClass = 'btn btn-outline-secondary btn-sm mt-1 me-1';
+    const isCardio = this.props.isCardio ?? false;
+    const duration = (isNaN(this.state.duration) || this.state.duration === 0) ? '' : this.state.duration;
+    const weight = (isNaN(this.state.weight) || this.state.weight === 0) ? '' : this.state.weight;
+    const reps = (isNaN(this.state.reps) || this.state.reps === 0) ? '' : this.state.reps;
     const sets = this.props.sets ?? [];
     return(
       <div className='card me-2'>
         <div className='d-flex align-items-center justify-content-between'>
           <h5 className='card-title'>Add Sets:</h5>
-          <div className='btn btn-sm btn-dark mt-1' onClick={this.toggleType}>
-            Change Type
-          </div>
+          <div className={clearBtnClass} onClick={this.handleClear}>Clear</div>
         </div>
         <div className='card-body'>
           <div className={formClass}>
             {isCardio && <div className='col-12'>
-              <label>Duration (in minutes): </label>
-              <input id='duration' type='number' value={duration} onChange={this.handleDurationChange} />
+              <label className='form-label'>Duration (in minutes): </label>
+              <input className='form-control' id='duration' type='number' value={duration} onChange={this.handleDurationChange} />
             </div>}
             {!isCardio && <>
               <div className='col-12'>
-                <label>Weight: </label>
-                <input id='weight' type='number' value={weight} onChange={this.handleWeightChange} />
+                <label className='form-label'>Weight: </label>
+                <input className='form-control' id='weight' type='number' value={weight} onChange={this.handleWeightChange} />
               </div>
               <div className='col-12'>
-                <label>Reps: </label>
-                <input id='reps' type='number' value={reps} onChange={this.handleRepsChange} />
+                <label className='form-label'>Reps: </label>
+                <input className='form-control' id='reps' type='number' value={reps} onChange={this.handleRepsChange} />
               </div>
             </>}
-            <div className='btn btn-primary btn-sm' onClick={this.handleClick}>+ Add Set</div>
+            <div className='btn btn-primary btn-sm col-12' onClick={this.handleClick}>+ Add Set</div>
           </div>
-          {sets.length > 0 && <div className='card mt-1'>
-            <div className='card-body'>
-              <SetList sets={sets} />
-            </div>
-          </div>}
+          {sets.length > 0 &&
+            <><hr/><SetList className='card-body' sets={sets} /></>}
         </div>
       </div>
     );

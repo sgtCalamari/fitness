@@ -10,6 +10,7 @@ class SetList extends React.Component {
 
   render() {
     const sets = this.props.sets ?? [];
+    if (sets.length === 0) return null;
     return this.formatSets(sets);
   }
 }

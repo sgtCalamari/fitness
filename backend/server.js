@@ -1,5 +1,6 @@
 const express = require('express');
 const connection = require('./mongoose');
+const cors = require('cors');
 const routes = require('./routes');
 const app = express();
 
@@ -11,6 +12,7 @@ const displayName = process.env.DISPLAY_NAME || "Fitness";
 // middleware
 app.use(express.json()); // replaces body-parser
 app.use(express.urlencoded({extended: true}));
+app.use(cors());
 
 // app routes
 app.use('/users', routes.users);
