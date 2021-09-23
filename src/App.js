@@ -11,6 +11,7 @@ import Copyright from './components/Copyright';
 class App extends React.Component {
   constructor(props) {
     super(props);
+    this.componentDidMount = this.componentDidMount.bind(this);
     this.state = {
       workouts: []
     };
@@ -23,7 +24,7 @@ class App extends React.Component {
         <div className="container">
           <Navbar />
           <Route path='/' exact><WorkoutSummary workouts={workouts} /></Route>
-          <Route path='/log'><CreateWorkout /></Route>
+          <Route path='/log'><CreateWorkout onWorkoutSubmit={this.componentDidMount} /></Route>
           <Copyright />
         </div>
       </Router>
@@ -31,10 +32,11 @@ class App extends React.Component {
   }
 
   componentDidMount() {
+    console.log('updating workouts');
     axios.get('http://fitapi.joemart.in/workouts/')
       .then(response => this.setState({ workouts: response.data }))
       .catch(error => console.log(error));
-    }
+  }
 }
 
 export default App;
