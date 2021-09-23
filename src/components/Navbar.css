@@ -1,3 +1,8 @@
 #navbarContent.hide {
   display: none;
 }
+
+nav {
+  border-bottom-left-radius: 5px;
+  border-bottom-right-radius: 5px;
+}

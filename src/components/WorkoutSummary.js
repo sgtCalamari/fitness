@@ -1,5 +1,5 @@
 import React from 'react';
-import WorkoutList from './WorkoutList'
+import WorkoutList from './WorkoutList';
 
 class WorkoutSummary extends React.Component {
   render() {

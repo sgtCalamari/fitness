@@ -21,14 +21,15 @@ class Navbar extends React.Component {
     const showNav = this.state.showNav;
     const paths = [
       {path: '/', text: 'Workouts'},
-      {path: '/log', text: 'Log Workout'}
+      {path: '/log', text: 'Log Workout'},
+      {path: '/exerciseTypes', text: 'Exercise Types'}
     ];
     const navbarContentClass = (showNav ? '' : 'hide') + ' navbar-collapse';
     return (
-      <nav className='navbar navbar-dark bg-dark navbar-expand-lg'>
+      <nav className='navbar navbar-dark bg-dark navbar-expand-lg mb-1'>
         <div className='container-fluid'>
-          <Link to='/' className='navbar-brand'>Fitness</Link>
-          <button className='navbar-toggler' type='button' onClick={this.handleClick}>
+          <Link to='/' className='navbar-brand' onClick={this.handleClick}>Fitness</Link>
+          <button className='navbar-toggler' type='button' onClick={this.handleClick} style={{borderStyle:'none'}}>
             <span className='navbar-toggler-icon'></span>
           </button>
           <div className={navbarContentClass} id="navbarContent">

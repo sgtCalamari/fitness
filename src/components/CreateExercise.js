@@ -1,4 +1,5 @@
 import React from 'react';
+import axios from 'axios';
 import ExerciseList from './ExerciseList';
 import CreateSet from  './CreateSet';
 
@@ -11,25 +12,19 @@ class CreateExercise extends React.Component {
     this.state = {
       name: '',
       musclegroups: [],
-      sets: []
+      sets: [],
+      exerciseTypes: []
     };
   }
 
+  componentDidMount() {
+    this.getExerciseTypes();
+  }
+
   getExerciseTypes() {
-    return this.props.exerciseTypes ?? [ // apply defaults if falsy
-      {name: 'pectoral fly', musclegroups: ['chest']},
-      {name: 'chest press', musclegroups: ['chest']},
-      {name: 'shoulder press', musclegroups: ['shoulders']},
-      {name: 'leg press', musclegroups: ['quads']},
-      {name: 'squats', musclegroups: ['glutes','quads']},
-      {name: 'bosu tips', musclegroups: ['abs']},
-      {name: 'bicep curl', musclegroups: ['biceps']},
-      {name: 'tricep press', musclegroups: ['triceps']},
-      {name: 'tricep extension', musclegroups: ['triceps']},
-      {name: 'cycling', musclegroups: ['cardio']},
-      {name: 'running', musclegroups: ['cardio']},
-      {name: 'walking', musclegroups: ['cardio']},
-    ];
+    axios.get('https://fitness.joemart.in/api/exerciseTypes')
+      .then(types => this.setState({ exerciseTypes: types.data }))
+      .catch(err => console.log(err));
   }
 
   formatExerciseTypeOptions(exerciseTypes) {
@@ -39,7 +34,7 @@ class CreateExercise extends React.Component {
   }
 
   lookupMuscleGroups(exerciseName) {
-    const exerciseTypes = this.getExerciseTypes();
+    const exerciseTypes = this.state.exerciseTypes;
     const match = exerciseTypes?.find(et => et.name === exerciseName);
     if (match) return match.musclegroups;
     return [];
@@ -78,6 +73,7 @@ class CreateExercise extends React.Component {
   render() {
     const exercises = this.props.exercises;
     const muscleGroups = this.state.musclegroups?.sort().join('/');
+    const exerciseTypes = this.state.exerciseTypes;
     const isCardio = muscleGroups.indexOf('cardio') !== -1;
     const formClass = 'row row-cols-lg-auto g-3 align-items-center';
     const buttonClass = 'btn btn-primary btn-sm';
@@ -95,7 +91,7 @@ class CreateExercise extends React.Component {
                 onChange={this.handleExerciseNameChange}
                 value={selectValue}>
                 <option disabled value='default'>-- select an option --</option>
-                {this.formatExerciseTypeOptions(this.getExerciseTypes())}
+                {this.formatExerciseTypeOptions(exerciseTypes)}
               </select>
             </div>
             <div className='col-12'>

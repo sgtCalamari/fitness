@@ -1,6 +1,7 @@
 const express = require('express');
 const connection = require('./mongoose');
 const cors = require('cors');
+const path = require('path');
 const routes = require('./routes');
 const app = express();
 
@@ -14,10 +15,12 @@ app.use(express.json()); // replaces body-parser
 app.use(express.urlencoded({extended: true}));
 app.use(cors());
 
-// app routes
-app.use('/users', routes.users);
-app.use('/workouts', routes.workouts);
-app.use('/muscleGroups', routes.muscleGroups);
+// api routes
+app.use('/api', routes);
+
+// react app
+app.use(express.static(path.join(__dirname, '..', 'build')));
+app.get('/*', (req, res) => res.sendFile(path.join(__dirname, '..', 'build', 'index.html')));
 
 app.listen(port, () => {
   console.log(`Node Express server for ${displayName} listening at http://localhost:${port}`);

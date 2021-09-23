@@ -4,6 +4,7 @@ import { BrowserRouter as Router, Route } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 import WorkoutSummary from './components/WorkoutSummary';
+import ExerciseTypeSummary from './components/ExerciseTypeSummary';
 import CreateWorkout from './components/CreateWorkout';
 import Navbar from './components/Navbar';
 import Copyright from './components/Copyright';
@@ -25,6 +26,7 @@ class App extends React.Component {
           <Navbar />
           <Route path='/' exact><WorkoutSummary workouts={workouts} /></Route>
           <Route path='/log'><CreateWorkout onWorkoutSubmit={this.componentDidMount} /></Route>
+          <Route path='/exerciseTypes' component={ExerciseTypeSummary} />
           <Copyright />
         </div>
       </Router>
@@ -32,8 +34,7 @@ class App extends React.Component {
   }
 
   componentDidMount() {
-    console.log('updating workouts');
-    axios.get('http://fitapi.joemart.in/workouts/')
+    axios.get('https://fitness.joemart.in/api/workouts/')
       .then(response => this.setState({ workouts: response.data }))
       .catch(error => console.log(error));
   }
