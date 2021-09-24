@@ -4,8 +4,14 @@ import WorkoutDetail from './WorkoutDetail';
 import './WorkoutList.css';
 
 class WorkoutList extends React.Component {
+  sortWorkoutsByDate = (a, b) => {
+    if (a.date < b.date) return 1;
+    if (a.date > b.date) return -1;
+    return 0;
+  };
+
   render() {
-    const workouts = this.props.workouts ?? [];
+    const workouts = this.props.workouts.sort(this.sortWorkoutsByDate) ?? [];
     return <div className='accordion'>
       {workouts.map((w) => {
         const id = w._id;
