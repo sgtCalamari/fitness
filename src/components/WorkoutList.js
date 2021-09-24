@@ -8,12 +8,14 @@ class WorkoutList extends React.Component {
     const workouts = this.props.workouts ?? [];
     return <div className='accordion'>
       {workouts.map((w) => {
+        const id = w._id;
         const date = moment(w.date).format('ddd MMM DD, yyyy');
         const location = w.location;
         const exercises = w.exercises;
         return (
           <div key={date} className="accordion-item">
             <WorkoutDetail
+              id={id}
               className="accordion-header"
               date={date}
               location={location}

@@ -1,10 +1,12 @@
 import React from 'react';
+import axios from 'axios';
 import ExerciseList from './ExerciseList';
 
 class WorkoutDetail extends React.Component {
   constructor(props) {
     super(props);
     this.handleClick = this.handleClick.bind(this);
+    this.areYouFuckingSure = this.areYouFuckingSure.bind(this);
     this.state = {
       show: false
     }
@@ -16,9 +18,30 @@ class WorkoutDetail extends React.Component {
     }));
   }
 
+  handleDelete() {
+    axios.delete('https://fitness.joemart.in/api/workouts/' + this.props.id)
+      .then(result => window.location.reload())
+      .catch(err => console.log(err));
+  }
+
+  areYouFuckingSure() {
+    const date = this.props.date;
+    const muscleGroups = this.props.exercises
+      .map(e => e.musclegroups) // gather musclegroups arrays
+      .flat() // flatten musclegroups arrays
+      .filter((mg, i, s) => s.indexOf(mg) === i) // get distinct
+      .sort()
+      .join('/');
+    const location = this.props.location ? ` @ ${this.props.location}` : null;
+
+    const confirmMessage = `you are about to delete ${date} ${location} (${muscleGroups})... are you sure?`;
+    const userIsFuckingSure = window.confirm(confirmMessage);
+    if (userIsFuckingSure) this.handleDelete();
+    else console.log('CRISIS AVERTED! Carry on.');
+  }
+
   render() {
     const showDiv = this.state.show;
-
     const date = this.props.date;
     const exercises = this.props.exercises;
     const location = this.props.location;
@@ -45,6 +68,10 @@ class WorkoutDetail extends React.Component {
               <b className='ms-1'>({muscleGroups})</b>
             </span>
           </p>
+          {showDiv && <button
+            className='btn btn-sm btn-outline-danger me-1'
+            onClick={this.areYouFuckingSure}
+          >x</button>}
         </div>
         {showDiv && <ExerciseList exercises={exercises} />}
       </div>

@@ -12,7 +12,6 @@ class GARoute extends React.Component {
     if (this.props.children?.props?.path) path = this.props.children?.props?.path;
     if (this.props.children?.props?.to) path = this.props.children?.props?.to;
     if (this.props.path) path = this.props.path;
-    console.log(path);
     ReactGA.pageview(path);
   }
 

@@ -29,7 +29,7 @@ class App extends React.Component {
     const workouts = this.state.workouts;
     return (
       <Router>
-        <div className="container">
+        <div className="container-fluid">
             <Navbar />
             <GARoute><Route path='/' exact><WorkoutSummary workouts={workouts} /></Route></GARoute>
             <GARoute><Route path='/log'><CreateWorkout onWorkoutSubmit={this.componentDidMount} /></Route></GARoute>

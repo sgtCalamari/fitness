@@ -28,6 +28,18 @@ router.get('/:username', (req, res) => {
     .catch(err => res.status(400).json('Error: ' + err));
 });
 
+router.get('/:id', (req, res) => {
+  Workout.findById(req.params.id)
+    .then(w => res.json(w))
+    .catch(err => res.status(400).json('Error: ' + err));
+});
+
+router.delete('/:id', (req, res) => {
+  Workout.deleteOne({_id: req.params.id})
+    .then(r => res.send(r))
+    .catch(err => console.log(err));
+});
+
 router.post('/update/:id', (req, res) => {
   Workout.findById(req.params.id)
     .then(w => {
