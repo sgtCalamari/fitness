@@ -27,8 +27,12 @@ class CreateExerciseType extends React.Component {
     const musclegroups = this.state.musclegroups;
     if (!name || name.length === 0) return alert('Please enter a valid name');
     if (musclegroups.length === 0) {
+      const choice = this.getMuscleGroupChoice();
       if (isCardio) musclegroups.push('cardio');
-      else return alert('Please enter at least one muscle group');
+      else {
+        if (choice) musclegroups.push(choice);
+        else return alert('Please enter at least one muscle group');
+      }
     }
 
     const newExerciseType = { name, musclegroups };
@@ -40,6 +44,10 @@ class CreateExerciseType extends React.Component {
     }));
     this.getMuscleGroups();
     this.props.onSubmitNewType?.(newExerciseType);
+  }
+
+  getMuscleGroupChoice() {
+    return document.querySelectorAll('select').valueOf('selected')[0].value;
   }
 
   getMuscleGroups() {
@@ -61,7 +69,7 @@ class CreateExerciseType extends React.Component {
   }
 
   handleMuscleGroupAdd() {
-    const choice = document.querySelectorAll('select').valueOf('selected')[0].value;
+    const choice = this.getMuscleGroupChoice();
     if (choice?.length > 0)
       this.setState((state) => ({
         musclegroups: [...state.musclegroups, choice],

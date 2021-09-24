@@ -23,15 +23,19 @@ class ExerciseDetail extends React.Component {
     const muscleGroups = this.props.musclegroups?.sort().join('/');
     const sets = this.props.sets;
 
-    const buttonClass = 'btn btn-sm me-1 '+(showDiv?'btn-secondary':'btn-primary');
-    const buttonText = (showDiv ? "Hide" : "Show") + ' Sets';
+    const buttonClass = 'btn btn-sm me-1 btn-light';
+    const buttonText = (showDiv ? "-" : "+");
     const divClass = 'd-flex align-items-center justify-content-between';
 
     return (
       <div onClick={showDiv ? null : this.handleClick}>
         <div className={divClass} onClick={showDiv ? this.handleClick : null}>
-          <p className='exerciseInfo'>{name} <b>({muscleGroups})</b></p>
-          <button className={buttonClass}>{buttonText}</button>
+          <p className='exerciseInfo'>
+            <button className={buttonClass}>
+              {buttonText}
+            </button>
+            {name} <b>({muscleGroups})</b>
+          </p>
         </div>
         {showDiv && <SetList sets={sets} />}
       </div>

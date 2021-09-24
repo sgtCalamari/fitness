@@ -1,5 +1,6 @@
 import React from 'react';
 import axios from 'axios';
+import ReactGA from 'react-ga';
 import { BrowserRouter as Router, Route } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
@@ -8,6 +9,7 @@ import ExerciseTypeSummary from './components/ExerciseTypeSummary';
 import CreateWorkout from './components/CreateWorkout';
 import Navbar from './components/Navbar';
 import Copyright from './components/Copyright';
+import GARoute from './components/GARoute';
 
 class App extends React.Component {
   constructor(props) {
@@ -18,16 +20,21 @@ class App extends React.Component {
     };
   }
 
+  componentDidUpdate() {
+    ReactGA.initialize('UA-161551757-5');
+    ReactGA.pageview('/');
+  }
+
   render() {
     const workouts = this.state.workouts;
     return (
       <Router>
         <div className="container">
-          <Navbar />
-          <Route path='/' exact><WorkoutSummary workouts={workouts} /></Route>
-          <Route path='/log'><CreateWorkout onWorkoutSubmit={this.componentDidMount} /></Route>
-          <Route path='/exerciseTypes' component={ExerciseTypeSummary} />
-          <Copyright />
+            <Navbar />
+            <GARoute><Route path='/' exact><WorkoutSummary workouts={workouts} /></Route></GARoute>
+            <GARoute><Route path='/log'><CreateWorkout onWorkoutSubmit={this.componentDidMount} /></Route></GARoute>
+            <GARoute><Route path='/exerciseTypes' component={ExerciseTypeSummary} /></GARoute>
+            <Copyright />
         </div>
       </Router>
     );
