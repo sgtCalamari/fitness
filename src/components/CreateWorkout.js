@@ -30,7 +30,10 @@ class CreateWorkout extends React.Component {
     const newWorkout = { username: 'joe', date, location, exercises };
     // submit workout to db
     axios.post('https://fitness.joemart.in/api/workouts/add', newWorkout)
-      .then(result => this.props.onWorkoutSubmit());
+      .then(result => {
+        newWorkout._id = result.data._id;
+        this.props.onWorkoutSubmit()
+      });
     this.setState((state) => ({
       workouts: [...state.workouts, newWorkout],
       exercises: []

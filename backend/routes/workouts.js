@@ -18,7 +18,7 @@ router.post('/add', (req, res) => {
     date,
     location,
     exercises
-  }).save().then(() => res.json('Workout added!'))
+  }).save().then(result => res.json(result))
     .catch(err => res.status(400).json('Error: ' + err));
 });
 

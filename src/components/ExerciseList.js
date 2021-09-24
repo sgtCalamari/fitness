@@ -4,8 +4,11 @@ import ExerciseDetail from './ExerciseDetail'
 class ExerciseList extends React.Component {
   formatExercises(ex) {
     return(ex.map((e) =>
-      <li key={e.name} style={{listStyleType: 'none'}}>
-        <ExerciseDetail name={e.name} musclegroups={e.musclegroups} sets={e.sets} />
+      <li key={e.id || e._id || e.name} style={{listStyleType: 'none'}}>
+        <ExerciseDetail
+          name={e.name}
+          musclegroups={e.musclegroups}
+          sets={e.sets} />
       </li>));
   }
 
