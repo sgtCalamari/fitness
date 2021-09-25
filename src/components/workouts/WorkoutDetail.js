@@ -1,6 +1,6 @@
 import React from 'react';
 import axios from 'axios';
-import ExerciseList from './ExerciseList';
+import ExerciseList from '../exercises/ExerciseList';
 
 class WorkoutDetail extends React.Component {
   constructor(props) {

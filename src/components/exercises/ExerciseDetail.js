@@ -1,5 +1,5 @@
 import React from 'react';
-import SetList from './SetList';
+import SetList from '../sets/SetList';
 
 class ExerciseDetail extends React.Component {
   constructor(props) {

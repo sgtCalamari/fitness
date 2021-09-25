@@ -1,7 +1,7 @@
 import React from 'react';
 import axios from 'axios';
 import ExerciseList from './ExerciseList';
-import CreateSet from  './CreateSet';
+import CreateSet from  '../sets/CreateSet';
 
 class CreateExercise extends React.Component {
   constructor(props) {

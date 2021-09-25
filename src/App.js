@@ -4,12 +4,13 @@ import ReactGA from 'react-ga';
 import { BrowserRouter as Router, Route } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
-import WorkoutSummary from './components/WorkoutSummary';
-import ExerciseTypeSummary from './components/ExerciseTypeSummary';
-import CreateWorkout from './components/CreateWorkout';
-import Navbar from './components/Navbar';
-import Copyright from './components/Copyright';
-import GARoute from './components/GARoute';
+import UserLogin from './components/login/UserLogin';
+import WorkoutSummary from './components/workouts/WorkoutSummary';
+import ExerciseTypeSummary from './components/exerciseTypes/ExerciseTypeSummary';
+import CreateWorkout from './components/workouts/CreateWorkout';
+import Navbar from './components/main/Navbar';
+import Copyright from './components/main/Copyright';
+import GARoute from './components/main/GARoute';
 
 class App extends React.Component {
   constructor(props) {
@@ -31,8 +32,9 @@ class App extends React.Component {
       <Router>
         <div className="container-fluid">
             <Navbar />
+            <GARoute><Route path='/login' component={UserLogin} /></GARoute>
             <GARoute><Route path='/' exact><WorkoutSummary workouts={workouts} /></Route></GARoute>
-            <GARoute><Route path='/log'><CreateWorkout onWorkoutSubmit={this.componentDidMount} /></Route></GARoute>
+            <GARoute><Route path='/log' exact><CreateWorkout onWorkoutSubmit={this.componentDidMount} /></Route></GARoute>
             <GARoute><Route path='/exerciseTypes' component={ExerciseTypeSummary} /></GARoute>
             <Copyright />
         </div>

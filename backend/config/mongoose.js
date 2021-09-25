@@ -11,7 +11,5 @@ const options = {
 mongoose.connect(uri, options);
 const connection = mongoose.connection;
 connection.once('open', () => {
-  console.log('MongoDB connection established successfully');
+  console.log(`MongoDB connection opened successfully at ${uri}`);
 });
-
-module.exports = connection;

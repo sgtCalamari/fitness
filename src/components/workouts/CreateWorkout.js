@@ -1,7 +1,7 @@
 import React from 'react';
 import moment from 'moment';
 import axios from 'axios';
-import CreateExercise from './CreateExercise';
+import CreateExercise from '../exercises/CreateExercise';
 import WorkoutList from './WorkoutList';
 
 class CreateWorkout extends React.Component {

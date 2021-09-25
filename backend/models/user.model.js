@@ -8,6 +8,14 @@ const userSchema = new Schema({
     unique: true,
     trim: true,
     minlength: 3
+  },
+  salt: {
+    type: String,
+    required: true
+  },
+  hash: {
+    type: String,
+    required: true
   }
 }, { timestamps: true })
 
