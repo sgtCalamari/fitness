@@ -33,7 +33,10 @@ router.post('/register', (req, res) => {
         res.status(400).json({success: false, msg: 'username already exists'});
       }
     })
-    .catch(err => res.status(400).json({success: false, msg: err}));
+    .catch(err => {
+      console.log('caught error instead');
+      res.status(400).json({success: false, msg: err});
+    });
 
   const saltHash = utils.genPassword(req.body.password);
   const salt = saltHash.salt;

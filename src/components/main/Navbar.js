@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import GARoute from './GARoute';
+import Logout from '../login/Logout';
 import './Navbar.css';
 
 class Navbar extends React.Component {
@@ -13,9 +14,16 @@ class Navbar extends React.Component {
     };
   }
 
+  componentDidMount() {
+    const auth = localStorage.getItem('auth');
+    this.setState({isLoggedIn: auth !== undefined});
+  }
+
   handleClick() {
+    const auth = localStorage.getItem('auth');
     this.setState((state) => ({
-      showNav: !state.showNav
+      showNav: !state.showNav,
+      isLoggedIn: auth !== null
     }));
   }
 
@@ -30,7 +38,7 @@ class Navbar extends React.Component {
       {path: '/log', text: 'Log Workout'},
       {path: '/exerciseTypes', text: 'Exercise Types'}
     ];
-    const navbarContentClass = (showNav ? '' : 'hide') + ' navbar-collapse';
+    const navbarContentClass = (showNav ? '' : 'hide') + ' navbar-collapse justify-content-between';
     return (
       <nav className='navbar navbar-dark bg-dark navbar-expand-lg mb-1'>
         <div className='container-fluid'>
@@ -47,6 +55,17 @@ class Navbar extends React.Component {
                   </GARoute>
                 </li>))}
             </ul>
+            {this.state.isLoggedIn &&
+              <div onClick={this.handleClick}>
+                <ul className='navbar-nav mr-auto'>
+                  <li><hr/></li>
+                  <li className='navbar-item'>
+                    <GARoute>
+                      <Logout className='nav-link' />
+                    </GARoute>
+                  </li>
+                </ul>
+              </div>}
           </div>
         </div>
       </nav>

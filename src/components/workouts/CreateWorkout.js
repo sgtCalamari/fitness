@@ -21,13 +21,14 @@ class CreateWorkout extends React.Component {
 
   handleSubmitWorkout() {
     // validate state workout values
+    const username = localStorage.getItem('username');
     const date = this.state.date;
     const location = this.state.location ?? '';
     const exercises = this.state.exercises;
     if (!date) return alert('please enter a valid date');
     if (exercises.length === 0) return alert('please enter at least one exercise');
     // configure new workout
-    const newWorkout = { username: 'joe', date, location, exercises };
+    const newWorkout = { username, date, location, exercises };
     // submit workout to db
     axios.post('https://fitness.joemart.in/api/workouts/add', newWorkout)
       .then(result => {

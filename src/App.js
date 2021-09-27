@@ -11,6 +11,7 @@ import CreateWorkout from './components/workouts/CreateWorkout';
 import Navbar from './components/main/Navbar';
 import Copyright from './components/main/Copyright';
 import GARoute from './components/main/GARoute';
+import PrivateRoute from './components/main/PrivateRoute';
 
 class App extends React.Component {
   constructor(props) {
@@ -33,9 +34,9 @@ class App extends React.Component {
         <div className="container-fluid">
             <Navbar />
             <GARoute><Route path='/login' component={UserLogin} /></GARoute>
-            <GARoute><Route path='/' exact><WorkoutSummary workouts={workouts} /></Route></GARoute>
-            <GARoute><Route path='/log' exact><CreateWorkout onWorkoutSubmit={this.componentDidMount} /></Route></GARoute>
-            <GARoute><Route path='/exerciseTypes' component={ExerciseTypeSummary} /></GARoute>
+            <GARoute><PrivateRoute path='/' exact><WorkoutSummary workouts={workouts} /></PrivateRoute></GARoute>
+            <GARoute><PrivateRoute path='/log' exact><CreateWorkout onWorkoutSubmit={this.componentDidMount} /></PrivateRoute></GARoute>
+            <GARoute><PrivateRoute path='/exerciseTypes'><ExerciseTypeSummary /></PrivateRoute></GARoute>
             <Copyright />
         </div>
       </Router>
@@ -43,7 +44,8 @@ class App extends React.Component {
   }
 
   componentDidMount() {
-    axios.get('https://fitness.joemart.in/api/workouts/')
+    const username = localStorage.getItem('username');
+    axios.get('https://fitness.joemart.in/api/workouts/' + username)
       .then(response => this.setState({ workouts: response.data }))
       .catch(error => console.log(error));
   }
