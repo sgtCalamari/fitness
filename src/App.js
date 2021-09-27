@@ -44,8 +44,12 @@ class App extends React.Component {
   }
 
   componentDidMount() {
+    const auth = localStorage.getItem('auth');
+    if (auth) {
+      axios.defaults.headers.common['Authorization'] = JSON.parse(auth)?.token;
+    }
     const username = localStorage.getItem('username');
-    axios.get('https://fitness.joemart.in/api/workouts/' + username)
+    axios.get(process.env.REACT_APP_API_URL + 'api/workouts/' + username)
       .then(response => this.setState({ workouts: response.data }))
       .catch(error => console.log(error));
   }

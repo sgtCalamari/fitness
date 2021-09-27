@@ -12,6 +12,10 @@ class ExerciseTypeList extends React.Component {
   }
 
   componentDidMount() {
+    const auth = localStorage.getItem('auth');
+    if (auth) {
+      axios.defaults.headers.common['Authorization'] = JSON.parse(auth)?.token;
+    }
     this.getMuscleGroups();
   }
 
@@ -27,7 +31,7 @@ class ExerciseTypeList extends React.Component {
   }
 
   getMuscleGroups() {
-    axios.get('https://fitness.joemart.in/api/musclegroups')
+    axios.get(`${process.env.REACT_APP_API_URL}api/musclegroups`)
       .then(result => this.setState({ musclegroups: result.data }))
       .catch(err => console.log(err));
   }

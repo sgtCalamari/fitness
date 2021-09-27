@@ -30,7 +30,9 @@ class CreateWorkout extends React.Component {
     // configure new workout
     const newWorkout = { username, date, location, exercises };
     // submit workout to db
-    axios.post('https://fitness.joemart.in/api/workouts/add', newWorkout)
+    const authToken = JSON.parse(localStorage.getItem('auth')).token;
+    const config = {headers: {Authorization: authToken}};
+    axios.post(`${process.env.REACT_APP_API_URL}api/workouts/add`, newWorkout, config)
       .then(result => {
         newWorkout._id = result.data._id;
         this.props.onWorkoutSubmit()
@@ -51,6 +53,13 @@ class CreateWorkout extends React.Component {
 
   handleExercisesChange(exercises) {
     this.setState({exercises: exercises});
+  }
+
+  componentDidMount() {
+    const auth = localStorage.getItem('auth');
+    if (auth) {
+      axios.defaults.headers.common['Authorization'] = JSON.parse(auth)?.token;
+    }
   }
 
   render() {

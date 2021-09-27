@@ -18,7 +18,7 @@ class UserLogin extends React.Component {
       successMsg: '',
       submitText: 'Login',
       toggleText: 'New User?',
-      hrefValue: 'https://fitness.joemart.in/api/login',
+      hrefValue: process.env.REACT_APP_API_URL + 'api/login',
       isRegister: false
     };
   }
@@ -39,7 +39,7 @@ class UserLogin extends React.Component {
     e.preventDefault();
     this.setState((state) => {
       const isRegister = !state.isRegister;
-      const urlBase = 'https://fitness.joemart.in/api/';
+      const urlBase = process.env.REACT_APP_API_URL + 'api/';
       return {
         isRegister,
         submitText: isRegister ? 'Register' : 'Login',
@@ -80,6 +80,7 @@ class UserLogin extends React.Component {
             };
             localStorage.setItem('auth', JSON.stringify(auth));
             localStorage.setItem('username', username);
+            axios.defaults.headers.common['Authorization'] = auth.token;
             console.log('token set to local storage');
           }
           window.location = '/';
@@ -94,6 +95,13 @@ class UserLogin extends React.Component {
           })}
         catch (err) { console.log(err) }
       });
+  }
+
+  componentDidMount() {
+    const auth = localStorage.getItem('auth');
+    if (auth) {
+      axios.defaults.headers.common['Authorization'] = JSON.parse(auth)?.token;  
+    }
   }
 
   render() {

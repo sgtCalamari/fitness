@@ -1,14 +1,15 @@
+const passport = require('passport');
 const router = require('express').Router();
 const moment = require('moment');
 let Workout = require('../models/workout.model');
 
-router.get('/', (req, res) => {
+router.get('/', passport.authenticate('jwt', {session: false}), (req, res) => {
   Workout.find()
     .then(workouts => res.json(workouts))
     .catch(err => res.status(400).json('Error: ' + err));
 })
 
-router.post('/add', (req, res) => {
+router.post('/add', passport.authenticate('jwt', {session: false}), (req, res) => {
   const username = req.body.username;
   const date = moment(req.body.date) || moment();
   const location = req.body.location;
@@ -22,25 +23,25 @@ router.post('/add', (req, res) => {
     .catch(err => res.status(400).json('Error: ' + err));
 });
 
-router.get('/:username', (req, res) => {
+router.get('/:username', passport.authenticate('jwt', {session: false}), (req, res) => {
   Workout.find({username: req.params.username})
     .then(w => res.json(w))
     .catch(err => res.status(400).json('Error: ' + err));
 });
 
-router.get('/:id', (req, res) => {
+router.get('/:id', passport.authenticate('jwt', {session: false}), (req, res) => {
   Workout.findById(req.params.id)
     .then(w => res.json(w))
     .catch(err => res.status(400).json('Error: ' + err));
 });
 
-router.delete('/:id', (req, res) => {
+router.delete('/:id', passport.authenticate('jwt', {session: false}), (req, res) => {
   Workout.deleteOne({_id: req.params.id})
     .then(r => res.send(r))
     .catch(err => console.log(err));
 });
 
-router.post('/update/:id', (req, res) => {
+router.post('/update/:id', passport.authenticate('jwt', {session: false}), (req, res) => {
   Workout.findById(req.params.id)
     .then(w => {
       if (req.body.username) w.username = req.body.username;

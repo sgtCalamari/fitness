@@ -15,8 +15,6 @@ const options = {
 
 module.exports = (passport) => {
   passport.use(new JwtStrategy(options, (jwt_payload, done) => {
-    console.log(jwt_payload);
-
     User.findOne({_id: jwt_payload.sub}, (err, user) => {
       return err
         ? done(err, false)

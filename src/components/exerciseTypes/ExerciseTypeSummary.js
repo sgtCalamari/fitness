@@ -13,11 +13,15 @@ class ExerciseTypeSummary extends React.Component {
   }
 
   componentDidMount() {
+    const auth = localStorage.getItem('auth');
+    if (auth) {
+      axios.defaults.headers.common['Authorization'] = JSON.parse(auth)?.token;
+    }
     this.getExerciseTypes();
   }
 
   handleNewExerciseType(exerciseType) {
-    axios.post('https://fitness.joemart.in/api/exerciseTypes/add', exerciseType)
+    axios.post(`${process.env.REACT_APP_API_URL}api/exerciseTypes/add`, exerciseType)
       .then(result => {
         console.log(result);
         this.setState((state) => ({
@@ -29,7 +33,7 @@ class ExerciseTypeSummary extends React.Component {
   }
 
   getExerciseTypes() {
-    axios.get('https://fitness.joemart.in/api/exerciseTypes')
+    axios.get(`${process.env.REACT_APP_API_URL}api/exerciseTypes`)
       .then(types => this.setState({exerciseTypes: types.data}))
       .catch(err => console.log(err));
   }
