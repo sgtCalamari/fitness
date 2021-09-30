@@ -25,7 +25,7 @@ class CreateWorkout extends React.Component {
     const date = this.state.date;
     const location = this.state.location ?? '';
     const exercises = this.state.exercises;
-    if (!date) return alert('please enter a valid date');
+    if (!date) return alert('Please enter a valid date');
     if (exercises.length === 0) return alert('Please enter at least one exercise');
     // configure new workout
     const newWorkout = { username, date, location, exercises };
@@ -59,6 +59,24 @@ class CreateWorkout extends React.Component {
     const auth = localStorage.getItem('auth');
     if (auth) {
       axios.defaults.headers.common['Authorization'] = JSON.parse(auth)?.token;
+    }
+    const existing = localStorage.getItem('unsavedExercises');
+    if (existing) {
+      const message = "Found existing exercises that haven't been saved to a workout. Would you like to pick up where you left off?";
+      const loadExisting = window.confirm(message);
+      if (loadExisting) {
+        this.setState({exercises: JSON.parse(existing)});
+      } else {
+        localStorage.removeItem('unsavedExercises');
+      }
+    }
+  }
+
+  componentWillUnmount() {
+    const exercises = this.state.exercises;
+    if (exercises && exercises.length > 0) {
+      console.log('setting unsaved exercises to local storage');
+      localStorage.setItem('unsavedExercises', JSON.stringify(exercises));
     }
   }
 

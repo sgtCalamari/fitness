@@ -18,6 +18,10 @@ class CreateExercise extends React.Component {
   }
 
   componentDidMount() {
+    const auth = localStorage.getItem('auth');
+    if (auth) {
+      axios.defaults.headers.common['Authorization'] = JSON.parse(auth)?.token;
+    }
     this.getExerciseTypes();
   }
 
@@ -47,10 +51,10 @@ class CreateExercise extends React.Component {
     const musclegroups = this.state.musclegroups;
     const sets = this.state.sets ?? [];
     if (!name) {
-      return alert('please select a workout type');
+      return alert('Please select a workout type');
     }
     if (sets.length === 0) {
-      return alert('please add sets to exercise before adding');
+      return alert('Please add sets to exercise before adding');
     }
     // configure new exercise object and add to existing exercises
     const newExercise = { name, musclegroups, sets };
