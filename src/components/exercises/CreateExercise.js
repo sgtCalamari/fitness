@@ -76,8 +76,10 @@ class CreateExercise extends React.Component {
 
   render() {
     const exercises = this.props.exercises;
+    const addedTypes = exercises?.map(e => e.name);
     const muscleGroups = this.state.musclegroups?.sort().join('/');
-    const exerciseTypes = this.state.exerciseTypes;
+    const exerciseTypes = this.state.exerciseTypes
+      ?.filter(et => !addedTypes.includes(et.name));
     const isCardio = muscleGroups.indexOf('cardio') !== -1;
     const formClass = 'row row-cols-lg-auto g-3 align-items-center';
     const buttonClass = 'btn btn-primary btn-sm';
@@ -101,7 +103,8 @@ class CreateExercise extends React.Component {
             <div className='col-12'>
               <input className='form-control' type='text' readOnly disabled value={muscleGroups} />
             </div>
-            <CreateSet onSetsChange={this.handleSetsChange} isCardio={isCardio} sets={sets} />
+            {selectValue !== 'default' &&
+              <CreateSet onSetsChange={this.handleSetsChange} isCardio={isCardio} sets={sets} />}
             <div className={buttonClass} onClick={this.handleClick}>+ Add Exercise</div>
           </div>
         </div>
