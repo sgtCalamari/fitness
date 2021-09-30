@@ -23,7 +23,7 @@ class ExerciseDetail extends React.Component {
     const muscleGroups = this.props.musclegroups?.sort().join('/');
     const sets = this.props.sets;
 
-    const buttonClass = 'btn btn-sm me-1 btn-light';
+    const buttonClass = 'btn btn-sm me-1';
     const buttonText = (showDiv ? "-" : "+");
     const divClass = 'd-flex align-items-center justify-content-between';
 

@@ -25,10 +25,10 @@ class CreateSet extends React.Component {
     const weight = this.state.weight;
     const reps = this.state.reps;
     if (duration === 0 && isCardio) {
-      return alert('please enter duration');
+      return alert('Please enter duration');
     }
     if (!isCardio && weight === 0 && reps === 0) {
-      return alert('please enter weight and reps');
+      return alert('Please enter weight and/or reps');
     }
     // configure new set object and add to existing sets
     const newSet = isCardio ? { duration } : { weight, reps };

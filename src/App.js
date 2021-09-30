@@ -30,16 +30,30 @@ class App extends React.Component {
   render() {
     const workouts = this.state.workouts;
     return (
+      <div style={{background: "url('/groovepaper.png')", height: '100vh'}}>
       <Router>
         <div className="container-fluid">
             <Navbar />
             <GARoute><Route path='/login' component={UserLogin} /></GARoute>
-            <GARoute><PrivateRoute path='/' exact><WorkoutSummary workouts={workouts} /></PrivateRoute></GARoute>
-            <GARoute><PrivateRoute path='/log' exact><CreateWorkout onWorkoutSubmit={this.componentDidMount} /></PrivateRoute></GARoute>
-            <GARoute><PrivateRoute path='/exerciseTypes'><ExerciseTypeSummary /></PrivateRoute></GARoute>
+            <GARoute>
+              <PrivateRoute path='/' exact>
+                <WorkoutSummary workouts={workouts} />
+              </PrivateRoute>
+            </GARoute>
+            <GARoute>
+              <PrivateRoute path='/log' exact>
+                <CreateWorkout onWorkoutSubmit={this.componentDidMount} />
+              </PrivateRoute>
+            </GARoute>
+            <GARoute>
+              <PrivateRoute path='/exerciseTypes'>
+                <ExerciseTypeSummary />
+              </PrivateRoute>
+            </GARoute>
             <Copyright />
         </div>
       </Router>
+      </div>
     );
   }
 
@@ -49,9 +63,11 @@ class App extends React.Component {
       axios.defaults.headers.common['Authorization'] = JSON.parse(auth)?.token;
     }
     const username = localStorage.getItem('username');
-    axios.get(process.env.REACT_APP_API_URL + 'api/workouts/' + username)
-      .then(response => this.setState({ workouts: response.data }))
-      .catch(error => console.log(error));
+    if (username) {
+      axios.get(process.env.REACT_APP_API_URL + 'api/workouts/' + username)
+        .then(response => this.setState({ workouts: response.data }))
+        .catch(error => console.log(error));
+    }
   }
 }
 

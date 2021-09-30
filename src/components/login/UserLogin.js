@@ -16,6 +16,7 @@ class UserLogin extends React.Component {
       retype: '',
       errorMsg: '',
       successMsg: '',
+      title: 'User Login',
       submitText: 'Login',
       toggleText: 'New User?',
       hrefValue: process.env.REACT_APP_API_URL + 'api/login',
@@ -43,6 +44,7 @@ class UserLogin extends React.Component {
       return {
         isRegister,
         submitText: isRegister ? 'Register' : 'Login',
+        title: isRegister ? 'User Registration' : 'User Login',
         toggleText: isRegister ? 'Go to Login' : 'New User?',
         hrefValue: isRegister ? urlBase + 'register' : urlBase + 'login'
       }
@@ -100,7 +102,7 @@ class UserLogin extends React.Component {
   componentDidMount() {
     const auth = localStorage.getItem('auth');
     if (auth) {
-      axios.defaults.headers.common['Authorization'] = JSON.parse(auth)?.token;  
+      axios.defaults.headers.common['Authorization'] = JSON.parse(auth)?.token;
     }
   }
 
@@ -109,14 +111,16 @@ class UserLogin extends React.Component {
     const password = this.state.password;
     const retype = this.state.retype;
     const isRegister = this.state.isRegister;
+    const title = this.state.title;
     const loginButtonText = this.state.submitText;
     const registerButtonText = this.state.toggleText;
     const hrefValue = this.state.hrefValue;
     const errorMsg = this.state.errorMsg;
     const successMsg = this.state.successMsg;
-    return (
-      <div>
-        <form method='post' href={hrefValue}>
+    return (<>
+      <div className='card'>
+        <h1 className='card-title mt-1 ms-1'>{title}</h1>
+        <form className='card-body' method='post' href={hrefValue}>
           <FormComponent
             name='Username'
             autocomplete='username email'
@@ -131,7 +135,12 @@ class UserLogin extends React.Component {
             onChange={this.handlePasswordChange}
           />
           {isRegister &&
-            <><input type='text' autoComplete='username' style={{display: 'none'}} disabled />
+            <><input
+                type='text'
+                autoComplete='username'
+                style={{display: 'none'}}
+                disabled
+              />
               <FormComponent
                 name='Retype password'
                 type='password'
@@ -156,15 +165,16 @@ class UserLogin extends React.Component {
             </button>
           </div>
         </form>
-        {errorMsg.length > 0 &&
-          <div className='alert alert-warning'>
-            {errorMsg}
-          </div>}
-        {successMsg.length > 0 &&
-          <div className='alert alert-success'>
-            {successMsg}
-          </div>}
       </div>
+      {errorMsg.length > 0 &&
+        <div className='alert alert-warning mt-1'>
+        {errorMsg}
+        </div>}
+      {successMsg.length > 0 &&
+        <div className='alert alert-success mt-1'>
+        {successMsg}
+        </div>}
+      </>
     );
   }
 }

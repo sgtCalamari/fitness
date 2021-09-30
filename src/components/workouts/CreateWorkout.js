@@ -26,7 +26,7 @@ class CreateWorkout extends React.Component {
     const location = this.state.location ?? '';
     const exercises = this.state.exercises;
     if (!date) return alert('please enter a valid date');
-    if (exercises.length === 0) return alert('please enter at least one exercise');
+    if (exercises.length === 0) return alert('Please enter at least one exercise');
     // configure new workout
     const newWorkout = { username, date, location, exercises };
     // submit workout to db
@@ -69,15 +69,19 @@ class CreateWorkout extends React.Component {
     const exercises = this.state.exercises ?? [];
     return (
       <div>
-        <h2>Log Workout</h2>
         <div>
-          <div>
-            <label className='form-label'>Name:</label>
-            <input type='date' className='form-control' id='workoutDate' value={dateValue} onChange={this.handleDateChange} />
-          </div>
-          <div>
-            <label className='form-label'>Location:</label>
-            <input type='text' className='form-control' id='workoutLocation' onChange={this.handleChangeLocation} />
+          <h2>Log Workout</h2>
+          <div className='card'>
+            <div className='card-body'>
+              <div>
+                <label className='form-label'>Name:</label>
+                <input type='date' className='form-control' id='workoutDate' value={dateValue} onChange={this.handleDateChange} />
+              </div>
+              <div>
+                <label className='form-label'>Location:</label>
+                <input type='text' className='form-control' id='workoutLocation' onChange={this.handleChangeLocation} />
+              </div>
+            </div>
           </div>
           <CreateExercise onExercisesChange={this.handleExercisesChange} exercises={exercises} />
           <div className='d-grid mt-2'>

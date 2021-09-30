@@ -34,7 +34,7 @@ class WorkoutDetail extends React.Component {
       .join('/');
     const location = this.props.location ? ` @ ${this.props.location}` : null;
 
-    const confirmMessage = `you are about to delete ${date} ${location} (${muscleGroups})... are you sure?`;
+    const confirmMessage = `You are about to delete ${date} ${location} (${muscleGroups})... are you sure?`;
     const userIsFuckingSure = window.confirm(confirmMessage);
     if (userIsFuckingSure) this.handleDelete();
     else console.log('CRISIS AVERTED! Carry on.');
@@ -53,7 +53,7 @@ class WorkoutDetail extends React.Component {
       .join('/');
 
     const buttonText = showDiv ? '-' : '+';
-    const buttonClass = 'btn btn-sm mx-1 btn-light';
+    const buttonClass = 'btn btn-sm mx-1';
     const divClass = 'd-flex justify-content-between align-items-center';
     const locationTag = location ? (<span className="ms-1">@ {location}</span>) : null;
 
