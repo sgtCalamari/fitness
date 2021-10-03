@@ -92,7 +92,7 @@ class CreateWorkout extends React.Component {
           <div className='card'>
             <div className='card-body'>
               <div>
-                <label className='form-label'>Name:</label>
+                <label className='form-label'>Date:</label>
                 <input type='date' className='form-control' id='workoutDate' value={dateValue} onChange={this.handleDateChange} />
               </div>
               <div>

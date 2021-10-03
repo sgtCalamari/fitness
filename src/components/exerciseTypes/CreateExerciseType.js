@@ -98,7 +98,7 @@ class CreateExerciseType extends React.Component {
           {availableGroups?.map(g => (<option key={g}>{g}</option>))}
         </select>
         {muscleGroups.length > 0 && <input className='form-control mb-1' type='text' readOnly disabled value={muscleGroups} />}
-        <button className='btn btn-sm btn-outline-primary' onClick={this.handleMuscleGroupAdd}>+ Add</button>
+        <button className='btn btn-sm btn-outline-primary' onClick={this.handleMuscleGroupAdd}>+ Add Muscle Group</button>
       </div>
     );
   }
