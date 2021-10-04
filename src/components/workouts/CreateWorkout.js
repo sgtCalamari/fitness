@@ -4,6 +4,7 @@ import moment from 'moment';
 import axios from 'axios';
 import CreateExercise from '../exercises/CreateExercise';
 import WorkoutList from './WorkoutList';
+import confetti from 'canvas-confetti';
 
 class CreateWorkout extends React.Component {
   constructor(props) {
@@ -43,6 +44,14 @@ class CreateWorkout extends React.Component {
       workouts: [...state.workouts, newWorkout],
       exercises: []
     }));
+    confetti({
+      particleCount: 500,
+      spread: 70,
+      startVelocity: 65,
+      origin: {
+        y: 1
+      }
+    });
   }
 
   handleDateChange(e) {
@@ -116,8 +125,8 @@ class CreateWorkout extends React.Component {
           <div className='d-grid mt-2'>
             <button
               type='button'
-              className='btn btn-primary btn-sm btn-fill'
-              onClick={this.handleSubmitWorkout}>+ Add Workout</button>
+              className='btn btn-success btn-sm btn-fill'
+              onClick={this.handleSubmitWorkout}>Finish Workout! 🎉</button>
           </div>
         </div>
         {workouts.length > 0 &&
