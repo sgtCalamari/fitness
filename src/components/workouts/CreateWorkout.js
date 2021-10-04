@@ -59,7 +59,6 @@ class CreateWorkout extends React.Component {
   }
 
   handleChangeLocation(e) {
-    console.log(e);
     this.setState({
       location: e?.label,
       locationData: e?.value
@@ -71,6 +70,14 @@ class CreateWorkout extends React.Component {
   }
 
   componentDidMount() {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(p => {
+        this.setState({
+          lat: p.coords.latitude,
+          long: p.coords.longitude
+        });
+      });
+    } else { console.log('no geolocation :('); }
     const auth = localStorage.getItem('auth');
     if (auth) {
       axios.defaults.headers.common['Authorization'] = JSON.parse(auth)?.token;
@@ -87,6 +94,17 @@ class CreateWorkout extends React.Component {
     }
   }
 
+  componentDidUpdate() {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(p => {
+        this.setState({
+          lat: p.coords.latitude,
+          long: p.coords.longitude
+        });
+      });
+    }
+  }
+
   componentWillUnmount() {
     const exercises = this.state.exercises;
     if (exercises && exercises.length > 0) {
@@ -100,6 +118,15 @@ class CreateWorkout extends React.Component {
     const dateValue = moment(date).format('yyyy-MM-DD');
     const workouts = this.state.workouts ?? [];
     const exercises = this.state.exercises ?? [];
+    let autocompletionRequest = null;
+    if (this.state.lat && this.state.long) {
+      const lat = parseFloat(this.state.lat);
+      const lng = parseFloat(this.state.long);
+      autocompletionRequest = {
+        location: { lat, lng },
+        radius: 8000
+      };
+    } else {  }
     return (
       <div>
         <div>
@@ -117,6 +144,7 @@ class CreateWorkout extends React.Component {
                   id='workoutLocation'
                   selectProps={{onChange: this.handleChangeLocation}}
                   apiKey='AIzaSyBZEWnTkalt9x1XNCdhO2fRfL-5DXcPutM'
+                  autocompletionRequest={{autocompletionRequest}}
                 />
               </div>
             </div>
