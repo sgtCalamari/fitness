@@ -3,6 +3,7 @@ import axios from 'axios';
 import ReactGA from 'react-ga';
 import { BrowserRouter as Router, Route } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import './App.css';
 
 import UserLogin from './components/login/UserLogin';
 import WorkoutSummary from './components/workouts/WorkoutSummary';
@@ -30,7 +31,7 @@ class App extends React.Component {
   render() {
     const workouts = this.state.workouts;
     return (
-      <div style={{background: "url('/groovepaper.png')", height: '100vh'}}>
+      <div style={{background:"url('/light-grey-terrazzo.png')",height:'100vh'}}>
       <Router>
         <div className="container-fluid">
             <Navbar />

@@ -59,7 +59,7 @@ class CreateExercise extends React.Component {
     // configure new exercise object and add to existing exercises
     const newExercise = { name, musclegroups, sets };
     this.props.onExercisesChange([...existingExercises, newExercise]);
-    this.setState({sets: []});
+    this.setState({name: 'default', sets: []});
   }
 
   handleSetsChange(sets) {

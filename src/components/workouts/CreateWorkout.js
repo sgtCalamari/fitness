@@ -1,4 +1,5 @@
 import React from 'react';
+import GooglePlacesAutocomplete from 'react-google-places-autocomplete';
 import moment from 'moment';
 import axios from 'axios';
 import CreateExercise from '../exercises/CreateExercise';
@@ -24,11 +25,12 @@ class CreateWorkout extends React.Component {
     const username = localStorage.getItem('username');
     const date = this.state.date;
     const location = this.state.location ?? '';
+    const locationData = this.state.locationData;
     const exercises = this.state.exercises;
     if (!date) return alert('Please enter a valid date');
     if (exercises.length === 0) return alert('Please enter at least one exercise');
     // configure new workout
-    const newWorkout = { username, date, location, exercises };
+    const newWorkout = { username, date, location, locationData, exercises };
     // submit workout to db
     const authToken = JSON.parse(localStorage.getItem('auth')).token;
     const config = {headers: {Authorization: authToken}};
@@ -48,7 +50,11 @@ class CreateWorkout extends React.Component {
   }
 
   handleChangeLocation(e) {
-    this.setState({location: e.target.value});
+    console.log(e);
+    this.setState({
+      location: e?.label,
+      locationData: e?.value
+    });
   }
 
   handleExercisesChange(exercises) {
@@ -88,7 +94,7 @@ class CreateWorkout extends React.Component {
     return (
       <div>
         <div>
-          <h2>Log Workout</h2>
+          <h1>Log Workout</h1>
           <div className='card'>
             <div className='card-body'>
               <div>
@@ -97,7 +103,12 @@ class CreateWorkout extends React.Component {
               </div>
               <div>
                 <label className='form-label'>Location:</label>
-                <input type='text' className='form-control' id='workoutLocation' onChange={this.handleChangeLocation} />
+                <GooglePlacesAutocomplete
+                  className='form-control'
+                  id='workoutLocation'
+                  selectProps={{onChange: this.handleChangeLocation}}
+                  apiKey='AIzaSyBZEWnTkalt9x1XNCdhO2fRfL-5DXcPutM'
+                />
               </div>
             </div>
           </div>
