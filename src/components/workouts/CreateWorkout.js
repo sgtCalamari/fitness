@@ -14,9 +14,17 @@ class CreateWorkout extends React.Component {
     this.handleChangeLocation = this.handleChangeLocation.bind(this);
     this.handleChangeLocationText = this.handleChangeLocationText.bind(this);
     this.handleSubmitWorkout = this.handleSubmitWorkout.bind(this);
+    this.locationInput = this.locationInput.bind(this);
     this.state = {
       date: moment(),
       location: '',
+      locationComponent: <input
+        type='text'
+        className='form-control'
+        id='workoutLocation'
+        onChange={this.handleChangeLocationText}
+        placeholder="Enter workout location (optional)"
+      />,
       exercises: [],
       workouts: []
     };
@@ -75,33 +83,25 @@ class CreateWorkout extends React.Component {
   }
 
   locationInput() {
-    const location = this.state.location;
-    const lat = this.state.lat;
-    const lng = this.state.lng;
-    const inputBox = <input
-      type='text'
-      className='form-control'
-      id='workoutLocation'
-      onChange={this.handleChangeLocationText}
-      value={location}
-    />;
-    if (!lat || !lng) return inputBox;
-    return <GooglePlacesAutocomplete
-      className='form-control'
-      id='workoutLocation'
-      selectProps={{onChange: this.handleChangeLocation}}
-      apiKey={process.env.REACT_APP_MAPS_APIKEY}
-      autocompletionRequest={{origin: {lat,lng}}}
-    />;
+    const button = document.querySelectorAll('#addLocationButton')[0];
+    button.setAttribute('disabled','');
+    if (navigator.geolocation) {
+      return navigator.geolocation.getCurrentPosition(p => this.setState({
+        locationComponent: <GooglePlacesAutocomplete
+          className='form-control'
+          id='workoutLocation'
+          selectProps={{onChange: this.handleChangeLocation}}
+          apiKey={process.env.REACT_APP_MAPS_APIKEY}
+          autocompletionRequest={{origin: {
+            lat: p.coords.latitude,
+            lng: p.coords.longitude
+          }}}
+        />
+      }));
+    }
   }
 
   componentDidMount() {
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(p => this.setState({
-        lat: p.coords.latitude,
-        lng: p.coords.longitude
-      }));
-    }
     const auth = localStorage.getItem('auth');
     if (auth) {
       axios.defaults.headers.common['Authorization'] = JSON.parse(auth)?.token;
@@ -131,19 +131,27 @@ class CreateWorkout extends React.Component {
     const dateValue = moment(date).format('yyyy-MM-DD');
     const workouts = this.state.workouts ?? [];
     const exercises = this.state.exercises ?? [];
+    const locationComponent = this.state.locationComponent;
     return (
       <div>
         <div>
           <h1>Log Workout</h1>
           <div className='card'>
             <div className='card-body'>
-              <div>
+              <div className='mb-2'>
                 <label className='form-label'>Date:</label>
                 <input type='date' className='form-control' id='workoutDate' value={dateValue} onChange={this.handleDateChange} />
               </div>
-              <div>
+              <div className='mb-2'>
                 <label className='form-label'>Location:</label>
-                {this.locationInput()}
+                <button
+                  id='addLocationButton'
+                  className='btn btn-sm btn-outline-primary ms-1'
+                  onClick={this.locationInput}
+                >
+                  + Add Geolocation
+                </button>
+                {locationComponent}
               </div>
             </div>
           </div>
