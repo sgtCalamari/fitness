@@ -91,14 +91,20 @@ class CreateExerciseType extends React.Component {
       ?.filter(g => g !== 'cardio').sort(); // remove cardio
     return (
       <div>
-        <select
-          className='form-select mb-1'
-          onChange={this.handleMuscleGroupSelect}
-        >
-          {availableGroups?.map(g => (<option key={g}>{g}</option>))}
-        </select>
-        {muscleGroups.length > 0 && <input className='form-control mb-1' type='text' readOnly disabled value={muscleGroups} />}
-        <button className='btn btn-sm btn-outline-primary' onClick={this.handleMuscleGroupAdd}>+ Add Muscle Group</button>
+        <div className='d-flex'>
+          <select
+            className='form-select me-1'
+            onChange={this.handleMuscleGroupSelect}
+          >
+            {availableGroups?.map(g => (<option key={g}>{g}</option>))}
+          </select>
+          <button className='btn btn-sm btn-outline-primary' onClick={this.handleMuscleGroupAdd}>+ Add Group</button>
+        </div>
+        {muscleGroups.length > 0 &&
+          <div>
+            <label>Selected groups:</label>
+            <input className='form-control mb-1 mt-1' type='text' readOnly disabled value={muscleGroups} />
+          </div>}
       </div>
     );
   }
