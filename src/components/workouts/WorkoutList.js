@@ -26,7 +26,8 @@ class WorkoutList extends React.Component {
               className="accordion-header"
               date={date}
               location={location}
-              exercises={exercises} />
+              exercises={exercises}
+            />
           </div>
         );
       })}

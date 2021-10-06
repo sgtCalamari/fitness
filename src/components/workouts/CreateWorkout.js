@@ -68,6 +68,7 @@ class CreateWorkout extends React.Component {
   }
 
   handleChangeLocation(e) {
+    console.log(e);
     this.setState({
       location: e?.label,
       locationData: e?.value
@@ -83,7 +84,7 @@ class CreateWorkout extends React.Component {
   }
 
   locationInput() {
-    const button = document.querySelectorAll('#addLocationButton')[0];
+    const button = document.querySelector('#addLocationButton');
     button.setAttribute('disabled','');
     if (navigator.geolocation) {
       return navigator.geolocation.getCurrentPosition(p => this.setState({

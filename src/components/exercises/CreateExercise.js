@@ -9,9 +9,12 @@ class CreateExercise extends React.Component {
     this.handleClick = this.handleClick.bind(this);
     this.handleSetsChange = this.handleSetsChange.bind(this);
     this.handleExerciseNameChange = this.handleExerciseNameChange.bind(this);
+    this.handleGroupChange = this.handleGroupChange.bind(this);
     this.state = {
       name: '',
       musclegroups: [],
+      allmusclegroups: [],
+      groupChoice: 'default',
       sets: [],
       exerciseTypes: []
     };
@@ -22,7 +25,49 @@ class CreateExercise extends React.Component {
     if (auth) {
       axios.defaults.headers.common['Authorization'] = JSON.parse(auth)?.token;
     }
+    this.getMuscleGroups();
     this.getExerciseTypes();
+  }
+
+  render() {
+    const exercises = this.props.exercises;
+    const addedTypes = exercises?.map(e => e.name);
+    const muscleGroups = this.state.musclegroups?.sort().join('/');
+    const exerciseTypes = this.state.exerciseTypes
+      ?.filter(et => !addedTypes.includes(et.name));
+    const isCardio = muscleGroups.indexOf('cardio') !== -1;
+    const formClass = 'row row-cols-lg-auto g-3 align-items-center';
+    const buttonClass = 'btn btn-primary btn-sm';
+    const selectValue = this.state.name || 'default';
+    const sets = this.state.sets;
+    return(
+      <div className='card mt-2'>
+        <h5 className='card-title mt-1 ms-1'>Add Exercises:</h5>
+        <div className='card-body'>
+          <div className={formClass}>
+            <div className='col-12'>
+              {this.formatMuscleGroupDropdown()}
+              <select
+                className='form-select'
+                id='exerciseName'
+                onChange={this.handleExerciseNameChange}
+                value={selectValue}>
+                <option disabled value='default'>-- select an option --</option>
+                {this.formatExerciseTypeOptions(exerciseTypes)}
+              </select>
+            </div>
+            <div className='col-12'>
+              <input className='form-control' type='text' readOnly disabled value={muscleGroups} />
+            </div>
+            {selectValue !== 'default' &&
+              <CreateSet onSetsChange={this.handleSetsChange} isCardio={isCardio} sets={sets} />}
+            <div className={buttonClass} onClick={this.handleClick}>+ Add Exercise</div>
+          </div>
+        </div>
+        {exercises.length > 0 &&
+          <><hr/><ExerciseList className='card-body' exercises={exercises} /></>}
+      </div>
+    );
   }
 
   getExerciseTypes() {
@@ -32,9 +77,15 @@ class CreateExercise extends React.Component {
   }
 
   formatExerciseTypeOptions(exerciseTypes) {
-    return exerciseTypes.map(et => et.name).sort().map(et => (
-      <option key={et}>{et}</option>
-    ));
+    const muscleGroupChoice = this.state.groupChoice;
+    const filterFunc = (et)=> et.musclegroups.indexOf(muscleGroupChoice) !== -1;
+    if (muscleGroupChoice !== 'default') {
+      exerciseTypes = exerciseTypes.filter(filterFunc);
+    }
+    return exerciseTypes
+      .map(et => et.name)
+      .sort()
+      .map(et => (<option key={et}>{et}</option>));
   }
 
   lookupMuscleGroups(exerciseName) {
@@ -74,44 +125,28 @@ class CreateExercise extends React.Component {
     });
   }
 
-  render() {
-    const exercises = this.props.exercises;
-    const addedTypes = exercises?.map(e => e.name);
-    const muscleGroups = this.state.musclegroups?.sort().join('/');
-    const exerciseTypes = this.state.exerciseTypes
-      ?.filter(et => !addedTypes.includes(et.name));
-    const isCardio = muscleGroups.indexOf('cardio') !== -1;
-    const formClass = 'row row-cols-lg-auto g-3 align-items-center';
-    const buttonClass = 'btn btn-primary btn-sm';
-    const selectValue = this.state.name || 'default';
-    const sets = this.state.sets;
-    return(
-      <div className='card mt-2'>
-        <h5 className='card-title mt-1 ms-1'>Add Exercises:</h5>
-        <div className='card-body'>
-          <div className={formClass}>
-            <div className='col-12'>
-              <select
-                className='form-select'
-                id='exerciseName'
-                onChange={this.handleExerciseNameChange}
-                value={selectValue}>
-                <option disabled value='default'>-- select an option --</option>
-                {this.formatExerciseTypeOptions(exerciseTypes)}
-              </select>
-            </div>
-            <div className='col-12'>
-              <input className='form-control' type='text' readOnly disabled value={muscleGroups} />
-            </div>
-            {selectValue !== 'default' &&
-              <CreateSet onSetsChange={this.handleSetsChange} isCardio={isCardio} sets={sets} />}
-            <div className={buttonClass} onClick={this.handleClick}>+ Add Exercise</div>
-          </div>
-        </div>
-        {exercises.length > 0 &&
-          <><hr/><ExerciseList className='card-body' exercises={exercises} /></>}
-      </div>
+  handleGroupChange(e) {
+    this.setState({groupChoice: e.target.value});
+  }
+
+  formatMuscleGroupDropdown() {
+    const musclegroups = this.state.allmusclegroups.map(g => g.name).sort();
+    return (
+      <select
+        className='form-select mb-1'
+        value={this.state.groupChoice}
+        onChange={this.handleGroupChange}
+      >
+        <option value='default'>Filter by muscle group:</option>
+        {musclegroups.map(g => (<option key={g}>{g}</option>))}
+      </select>
     );
+  }
+
+  getMuscleGroups() {
+    axios.get(`${process.env.REACT_APP_API_URL}api/musclegroups`)
+      .then(result => this.setState({ allmusclegroups: result.data }))
+      .catch(err => console.log(err));
   }
 }
 
