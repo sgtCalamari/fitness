@@ -4,7 +4,8 @@ import SetList from './SetList';
 class CreateSet extends React.Component {
   constructor(props) {
     super(props);
-    this.handleClick = this.handleClick.bind(this);
+    this.handleClickAdd = this.handleClickAdd.bind(this);
+    this.handleClickRemove = this.handleClickRemove.bind(this);
     this.handleClear = this.handleClear.bind(this);
     this.handleDurationChange = this.handleDurationChange.bind(this);
     this.handleWeightChange = this.handleWeightChange.bind(this);
@@ -15,44 +16,6 @@ class CreateSet extends React.Component {
       reps: 0,
       isCardio: false
     };
-  }
-
-  handleClick() {
-    // check state variables to make sure configured set passes validation
-    const existingSets = this.props.sets ?? [];
-    const isCardio = this.props.isCardio ?? false;
-    const duration = this.state.duration;
-    const weight = this.state.weight;
-    const reps = this.state.reps;
-    if (duration === 0 && isCardio) {
-      return alert('Please enter duration');
-    }
-    if (!isCardio && weight === 0 && reps === 0) {
-      return alert('Please enter weight and/or reps');
-    }
-    // configure new set object and add to existing sets
-    const newSet = isCardio ? { duration } : { weight, reps };
-    this.props.onSetsChange([...existingSets, newSet]);
-  }
-
-  handleClear() {
-    this.setState({
-      duration: 0,
-      weight: 0,
-      reps: 0
-    });
-  }
-
-  handleDurationChange(e) {
-    this.setState({ duration: parseFloat(e.target.value) });
-  }
-
-  handleWeightChange(e) {
-    this.setState({ weight: parseFloat(e.target.value) });
-  }
-
-  handleRepsChange(e) {
-    this.setState({ reps: parseFloat(e.target.value) });
   }
 
   render() {
@@ -85,13 +48,56 @@ class CreateSet extends React.Component {
                 <input className='form-control' id='reps' type='number' value={reps} onChange={this.handleRepsChange} />
               </div>
             </>}
-            <div className='btn btn-primary btn-sm col-12' onClick={this.handleClick}>+ Add Set</div>
+            <div className='btn btn-primary btn-sm col-12' onClick={this.handleClickAdd}>+ Add Set</div>
           </div>
           {sets.length > 0 &&
-            <><hr/><SetList className='card-body' sets={sets} /></>}
+            <><hr/><SetList className='card-body' sets={sets} onRemove={this.handleClickRemove} /></>}
         </div>
       </div>
     );
+  }
+
+  handleClickAdd() {
+    // check state variables to make sure configured set passes validation
+    const existingSets = this.props.sets ?? [];
+    const isCardio = this.props.isCardio ?? false;
+    const duration = this.state.duration;
+    const weight = this.state.weight;
+    const reps = this.state.reps;
+    if (duration === 0 && isCardio) {
+      return alert('Please enter duration');
+    }
+    if (!isCardio && weight === 0 && reps === 0) {
+      return alert('Please enter weight and/or reps');
+    }
+    // configure new set object and add to existing sets
+    const newSet = isCardio ? { duration } : { weight, reps };
+    this.props.onSetsChange([...existingSets, newSet]);
+  }
+
+  handleClickRemove(sets) {
+    console.log(sets);
+    this.props.onSetsChange(sets);
+  }
+
+  handleClear() {
+    this.setState({
+      duration: 0,
+      weight: 0,
+      reps: 0
+    });
+  }
+
+  handleDurationChange(e) {
+    this.setState({ duration: parseFloat(e.target.value) });
+  }
+
+  handleWeightChange(e) {
+    this.setState({ weight: parseFloat(e.target.value) });
+  }
+
+  handleRepsChange(e) {
+    this.setState({ reps: parseFloat(e.target.value) });
   }
 }
 

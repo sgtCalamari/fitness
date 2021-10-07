@@ -51,21 +51,38 @@ class CreateExercise extends React.Component {
                 className='form-select'
                 id='exerciseName'
                 onChange={this.handleExerciseNameChange}
-                value={selectValue}>
+                value={selectValue}
+                disabled={sets.length > 0}
+              >
                 <option disabled value='default'>-- select an option --</option>
                 {this.formatExerciseTypeOptions(exerciseTypes)}
               </select>
             </div>
             <div className='col-12'>
-              <input className='form-control' type='text' readOnly disabled value={muscleGroups} />
+              <input
+                className='form-control'
+                type='text'
+                readOnly
+                disabled
+                value={muscleGroups}
+              />
             </div>
             {selectValue !== 'default' &&
-              <CreateSet onSetsChange={this.handleSetsChange} isCardio={isCardio} sets={sets} />}
-            <div className={buttonClass} onClick={this.handleClick}>+ Add Exercise</div>
+              <CreateSet
+                onSetsChange={this.handleSetsChange}
+                isCardio={isCardio}
+                sets={sets}
+              />}
+            <div className={buttonClass} onClick={this.handleClick}>
+              + Add Exercise
+            </div>
           </div>
         </div>
         {exercises.length > 0 &&
-          <><hr/><ExerciseList className='card-body' exercises={exercises} /></>}
+          <>
+            <hr/>
+            <ExerciseList className='card-body' exercises={exercises} />
+          </>}
       </div>
     );
   }
@@ -110,7 +127,12 @@ class CreateExercise extends React.Component {
     // configure new exercise object and add to existing exercises
     const newExercise = { name, musclegroups, sets };
     this.props.onExercisesChange([...existingExercises, newExercise]);
-    this.setState({name: 'default', sets: []});
+    this.setState({
+      name: 'default',
+      groupChoice: 'default',
+      musclegroups: [],
+      sets: []
+    });
   }
 
   handleSetsChange(sets) {
@@ -126,16 +148,22 @@ class CreateExercise extends React.Component {
   }
 
   handleGroupChange(e) {
-    this.setState({groupChoice: e.target.value});
+    this.setState({
+      groupChoice: e.target.value,
+      name: 'default',
+      musclegroups: []
+    });
   }
 
   formatMuscleGroupDropdown() {
+    const sets = this.state.sets;
     const musclegroups = this.state.allmusclegroups.map(g => g.name).sort();
     return (
       <select
         className='form-select mb-1'
         value={this.state.groupChoice}
         onChange={this.handleGroupChange}
+        disabled={sets.length > 0}
       >
         <option value='default'>Filter by muscle group:</option>
         {musclegroups.map(g => (<option key={g}>{g}</option>))}

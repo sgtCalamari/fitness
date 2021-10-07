@@ -30,78 +30,6 @@ class CreateWorkout extends React.Component {
     };
   }
 
-  handleSubmitWorkout() {
-    // validate state workout values
-    const username = localStorage.getItem('username');
-    const date = this.state.date;
-    const location = this.state.location ?? '';
-    const locationData = this.state.locationData;
-    const exercises = this.state.exercises;
-    if (!date) return alert('Please enter a valid date');
-    if (exercises.length === 0) return alert('Please enter at least one exercise');
-    // configure new workout
-    const newWorkout = { username, date, location, locationData, exercises };
-    // submit workout to db
-    const authToken = JSON.parse(localStorage.getItem('auth')).token;
-    const config = {headers: {Authorization: authToken}};
-    axios.post(`${process.env.REACT_APP_API_URL}api/workouts/add`, newWorkout, config)
-      .then(result => {
-        newWorkout._id = result.data._id;
-        this.props.onWorkoutSubmit()
-      });
-    this.setState((state) => ({
-      workouts: [...state.workouts, newWorkout],
-      exercises: []
-    }));
-    confetti({
-      particleCount: 500,
-      spread: 70,
-      startVelocity: 65,
-      origin: {
-        y: 1
-      }
-    });
-  }
-
-  handleDateChange(e) {
-    this.setState({date: moment(e.target.value)});
-  }
-
-  handleChangeLocation(e) {
-    console.log(e);
-    this.setState({
-      location: e?.label,
-      locationData: e?.value
-    });
-  }
-
-  handleChangeLocationText(e) {
-    this.setState({location: e.target.value});
-  }
-
-  handleExercisesChange(exercises) {
-    this.setState({exercises: exercises});
-  }
-
-  locationInput() {
-    const button = document.querySelector('#addLocationButton');
-    button.setAttribute('disabled','');
-    if (navigator.geolocation) {
-      return navigator.geolocation.getCurrentPosition(p => this.setState({
-        locationComponent: <GooglePlacesAutocomplete
-          className='form-control'
-          id='workoutLocation'
-          selectProps={{onChange: this.handleChangeLocation}}
-          apiKey={process.env.REACT_APP_MAPS_APIKEY}
-          autocompletionRequest={{origin: {
-            lat: p.coords.latitude,
-            lng: p.coords.longitude
-          }}}
-        />
-      }));
-    }
-  }
-
   componentDidMount() {
     const auth = localStorage.getItem('auth');
     if (auth) {
@@ -140,7 +68,7 @@ class CreateWorkout extends React.Component {
           <div className='card'>
             <div className='card-body'>
               <div className='mb-2'>
-                <label className='form-label'>Date:</label>
+                <label className='form-label'>Workout Date:</label>
                 <input type='date' className='form-control' id='workoutDate' value={dateValue} onChange={this.handleDateChange} />
               </div>
               <div className='mb-2'>
@@ -168,6 +96,77 @@ class CreateWorkout extends React.Component {
           <div className='mt-1'><WorkoutList workouts={workouts} /></div>}
       </div>
     );
+  }
+
+  handleSubmitWorkout() {
+    // validate state workout values
+    const username = localStorage.getItem('username');
+    const date = this.state.date;
+    const location = this.state.location ?? '';
+    const locationData = this.state.locationData;
+    const exercises = this.state.exercises;
+    if (!date) return alert('Please enter a valid date');
+    if (exercises.length===0)return alert('Please enter at least one exercise');
+    // configure new workout
+    const newWorkout = { username, date, location, locationData, exercises };
+    // submit workout to db
+    const authToken = JSON.parse(localStorage.getItem('auth')).token;
+    const config = {headers: {Authorization: authToken}};
+    axios.post(`${process.env.REACT_APP_API_URL}api/workouts/add`, newWorkout, config)
+      .then(result => {
+        newWorkout._id = result.data._id;
+        this.props.onWorkoutSubmit()
+      });
+    this.setState((state) => ({
+      workouts: [...state.workouts, newWorkout],
+      exercises: []
+    }));
+    confetti({
+      particleCount: 500,
+      spread: 70,
+      startVelocity: 65,
+      origin: {
+        y: 1
+      }
+    });
+  }
+
+  handleDateChange(e) {
+    this.setState({date: moment(e.target.value)});
+  }
+
+  handleChangeLocation(e) {
+    this.setState({
+      location: e?.label,
+      locationData: e?.value
+    });
+  }
+
+  handleChangeLocationText(e) {
+    this.setState({location: e.target.value});
+  }
+
+  handleExercisesChange(exercises) {
+    this.setState({exercises: exercises});
+  }
+
+  locationInput() {
+    const button = document.querySelector('#addLocationButton');
+    button.setAttribute('disabled','');
+    if (navigator.geolocation) {
+      return navigator.geolocation.getCurrentPosition(p => this.setState({
+        locationComponent: <GooglePlacesAutocomplete
+          className='form-control'
+          id='workoutLocation'
+          selectProps={{onChange: this.handleChangeLocation}}
+          apiKey={process.env.REACT_APP_MAPS_APIKEY}
+          autocompletionRequest={{origin: {
+            lat: p.coords.latitude,
+            lng: p.coords.longitude
+          }}}
+        />
+      }));
+    }
   }
 }
 

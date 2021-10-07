@@ -7,7 +7,13 @@ class WorkoutSummary extends React.Component {
     return(
       <div>
         <h1>Workout Summary</h1>
-        <WorkoutList workouts={workouts} />
+        {(workouts && workouts.length > 0) &&
+          <WorkoutList workouts={workouts} />}
+        {(!workouts || workouts?.length === 0) &&
+          <div className='alert alert-secondary text-center'>
+            No workouts to show.<br/>
+            Ready to <a className="alert-link" href='/log'>log a workout</a>?
+          </div>}
       </div>
     );
   }
