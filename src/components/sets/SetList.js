@@ -14,7 +14,7 @@ class SetList extends React.Component {
   }
 
   formatSets(sets) {
-    return (<ul className='ms-3 mb-3'>{sets.map((s, i) =>
+    return (<ul className='ms-3'>{sets.map((s, i) =>
       <li
         key={i}
         style={{listStyleType: 'square'}}

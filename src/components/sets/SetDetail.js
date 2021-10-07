@@ -6,7 +6,7 @@ class SetDetail extends React.Component {
     const weight = this.props.weight;
     const reps = this.props.reps;
     return(
-      <span>{formatMessage(duration, weight, reps)}</span>
+      <p style={{display:'inline'}}>{formatMessage(duration, weight, reps)}</p>
     );
   }
 }
