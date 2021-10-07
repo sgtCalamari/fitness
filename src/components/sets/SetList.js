@@ -14,24 +14,25 @@ class SetList extends React.Component {
   }
 
   formatSets(sets) {
-    sets.forEach(s => console.log(s));
-    return (<ul className='ms-3'>{sets.map((s, i) =>
+    return (<ul className='ms-3 mb-3'>{sets.map((s, i) =>
       <li
         key={i}
-        className='justify-content-between'
         style={{listStyleType: 'square'}}
       >
-        <SetDetail duration={s.duration} weight={s.weight} reps={s.reps} />
-        {this.props.onRemove && this.formatRemoveButton(i)}
+        <div className='d-flex justify-content-between'>
+          <SetDetail duration={s.duration} weight={s.weight} reps={s.reps} />
+          {this.props.onRemove && this.formatRemoveButton(i)}
+        </div>
       </li>
     )}</ul>);
   }
 
   handleRemoveSet(e) {
-    console.log(e);
     const sets = this.props.sets;
     const index = e.target.id;
-    delete sets[index];
+    console.log(index);
+    sets.splice(index, 1);
+    console.log(sets);
     this.props.onRemove(sets);
   }
 
@@ -39,6 +40,7 @@ class SetList extends React.Component {
     return (
       <button
         className='btn btn-outline-danger btn-sm'
+        style={{display:'inline'}}
         id={i}
         onClick={this.handleRemoveSet}
       >
