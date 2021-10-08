@@ -20,15 +20,16 @@ class ExerciseTypeSummary extends React.Component {
     this.getExerciseTypes();
   }
 
-  handleNewExerciseType(exerciseType) {
+  handleNewExerciseType(exerciseType, cb) {
     axios.post(`${process.env.REACT_APP_API_URL}api/exerciseTypes/add`, exerciseType)
       .then(result => {
         console.log(result);
         this.setState((state) => ({
           exerciseTypes: [...state.exerciseTypes, exerciseType]
-        }))
+        }));
+        cb(true, 'Added new exercise type! 🎉');
       })
-      .catch(err => console.log(err));
+      .catch(err => cb(false, err.response.data));
 
   }
 

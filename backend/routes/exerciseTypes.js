@@ -12,9 +12,18 @@ router.post('/add', passport.authenticate('jwt', {session: false}), (req, res) =
   const name = req.body.name;
   const musclegroups = req.body.musclegroups;
   const newExerciseType = new ExerciseType({name, musclegroups});
-  newExerciseType.save()
-    .then(() => res.json('Exercise Type added!'))
-    .catch(err => res.status(400).json('Error: ' + err));
+  ExerciseType.findOne({name: newExerciseType.name})
+    .then(et => {
+      if (et) {
+        console.log('existing type found');
+        res.status(400).json('Error: exercise type already exists');
+      } else {
+        newExerciseType.save()
+          .then(() => res.json('Exercise Type added!'))
+          .catch(err => res.status(400).json('Error: ' + err));
+      }
+    })
+    .catch(err => console.log(err));
 });
 
 module.exports = router;

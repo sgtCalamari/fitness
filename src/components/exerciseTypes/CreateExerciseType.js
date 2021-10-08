@@ -12,7 +12,9 @@ class CreateExerciseType extends React.Component {
       name: '',
       isCardio: false,
       musclegroups: [],
-      availableGroups: []
+      availableGroups: [],
+      successMessage: '',
+      errorMessage: ''
     };
   }
 
@@ -23,6 +25,45 @@ class CreateExerciseType extends React.Component {
     }
     this.getMuscleGroups();
     this.setState((state) => ({availableGroups: state.availableGroups}));
+  }
+
+  render() {
+    const name = this.state.name;
+    const isCardio = this.state.isCardio;
+    const successMessage = this.state.successMessage;
+    const errorMessage = this.state.errorMessage;
+    return (
+      <div className='card mt-1'>
+        <h4 className='card-title mt-1 ms-1'>Create Exercise Type</h4>
+        <div className='card-body row'>
+          <div className='col-auto mb-2'>
+            <label className='form-label'>Name</label>
+            <input
+              className='form-control'
+              type='text'
+              value={name}
+              onChange={this.handleNameChange}
+            />
+          </div>
+          <div className='col-auto mb-2 d-grid'>
+            <button className='btn btn-sm btn-outline-dark' onClick={this.handleCardioCheck}>
+              Is Cardio?
+            </button>
+          </div>
+          <div className='col-auto mb-2'>
+            <label className='form-label'>Muscle Group(s)</label>
+            {this.formatMuscleGroups(isCardio)}
+          </div>
+          <div className='d-grid mb-2'>
+            <button className='btn btn-sm btn-primary' onClick={this.handleClick}>+ Add Exercise Type</button>
+          </div>
+          {successMessage.length > 0 &&
+            <div className='alert alert-success mb-0 mt-1'>{successMessage}</div>}
+          {errorMessage.length > 0 &&
+            <div className='alert alert-danger mb-0 mt-1'>{errorMessage}</div>}
+        </div>
+      </div>
+    );
   }
 
   handleClick() {
@@ -38,16 +79,19 @@ class CreateExerciseType extends React.Component {
         else return alert('Please enter at least one muscle group');
       }
     }
-
+    // add exercise!
     const newExerciseType = { name, musclegroups };
-
     this.setState((state) => ({
       name: '',
       isCardio: false,
       musclegroups: []
     }));
     this.getMuscleGroups();
-    this.props.onSubmitNewType?.(newExerciseType);
+    this.props.onSubmitNewType?.(newExerciseType, (isSuccessful, message) => {
+      if (isSuccessful) {
+        this.setState({successMessage: message});
+      } else { this.setState({errorMessage: message}) }
+    });
   }
 
   getMuscleGroupChoice() {
@@ -61,7 +105,11 @@ class CreateExerciseType extends React.Component {
   }
 
   handleNameChange(e) {
-    this.setState({ name: e.target.value });
+    this.setState({
+      name: e.target.value,
+      successMessage: '',
+      errorMessage: ''
+    });
   }
 
   handleCardioCheck() {
@@ -105,39 +153,6 @@ class CreateExerciseType extends React.Component {
             <label>Selected groups:</label>
             <input className='form-control mb-1 mt-1' type='text' readOnly disabled value={muscleGroups} />
           </div>}
-      </div>
-    );
-  }
-
-  render() {
-    const name = this.state.name;
-    const isCardio = this.state.isCardio;
-    return (
-      <div className='card mt-1'>
-        <h4 className='card-title mt-1 ms-1'>Create Exercise Type</h4>
-        <div className='card-body row'>
-          <div className='col-auto mb-2'>
-            <label className='form-label'>Name</label>
-            <input
-              className='form-control'
-              type='text'
-              value={name}
-              onChange={this.handleNameChange}
-            />
-          </div>
-          <div className='col-auto mb-2 d-grid'>
-            <button className='btn btn-sm btn-outline-dark' onClick={this.handleCardioCheck}>
-              Is Cardio?
-            </button>
-          </div>
-          <div className='col-auto mb-2'>
-            <label className='form-label'>Muscle Group(s)</label>
-            {this.formatMuscleGroups(isCardio)}
-          </div>
-          <div className='d-grid mb-2'>
-            <button className='btn btn-sm btn-primary' onClick={this.handleClick}>+ Add Exercise Type</button>
-          </div>
-        </div>
       </div>
     );
   }
