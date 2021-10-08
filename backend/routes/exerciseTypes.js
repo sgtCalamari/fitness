@@ -15,7 +15,6 @@ router.post('/add', passport.authenticate('jwt', {session: false}), (req, res) =
   ExerciseType.findOne({name: newExerciseType.name})
     .then(et => {
       if (et) {
-        console.log('existing type found');
         res.status(400).json('Error: exercise type already exists');
       } else {
         newExerciseType.save()
