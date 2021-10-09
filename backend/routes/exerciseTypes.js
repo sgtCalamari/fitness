@@ -9,7 +9,7 @@ router.get('/', passport.authenticate('jwt', {session: false}), (req, res) => {
 });
 
 router.post('/add', passport.authenticate('jwt', {session: false}), (req, res) => {
-  const name = req.body.name;
+  const name = req.body.name?.toLowerCase();
   const musclegroups = req.body.musclegroups;
   const newExerciseType = new ExerciseType({name, musclegroups});
   ExerciseType.findOne({name: newExerciseType.name})

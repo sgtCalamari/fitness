@@ -20,6 +20,17 @@ class ExerciseTypeSummary extends React.Component {
     this.getExerciseTypes();
   }
 
+  render() {
+    const types = this.state.exerciseTypes;
+    return (
+      <div>
+        <h1>Exercise Types</h1>
+        <CreateExerciseType onSubmitNewType={this.handleNewExerciseType} />
+        {types.length > 0 && <ExerciseTypeList exerciseTypes={types} />}
+      </div>
+    );
+  }
+
   handleNewExerciseType(exerciseType, cb) {
     axios.post(`${process.env.REACT_APP_API_URL}api/exerciseTypes/add`, exerciseType)
       .then(result => {
@@ -37,17 +48,6 @@ class ExerciseTypeSummary extends React.Component {
     axios.get(`${process.env.REACT_APP_API_URL}api/exerciseTypes`)
       .then(types => this.setState({exerciseTypes: types.data}))
       .catch(err => console.log(err));
-  }
-
-  render() {
-    const types = this.state.exerciseTypes;
-    return (
-      <div>
-        <h1>Exercise Types</h1>
-        <CreateExerciseType onSubmitNewType={this.handleNewExerciseType} />
-        {types.length > 0 && <ExerciseTypeList exerciseTypes={types} />}
-      </div>
-    );
   }
 }
 

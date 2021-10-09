@@ -19,6 +19,22 @@ class ExerciseTypeList extends React.Component {
     this.getMuscleGroups();
   }
 
+  render() {
+    const types = this.filterTypesByGroupChoice().sort(this.typeSortFunction);
+    return (
+      <div className='mt-2'>
+        {this.formatMuscleGroupDropdown()}
+        <div className='card'>
+          <div className='card-body'>
+            {types.map(t => (
+              <li key={t.name}>{t.name} ({t.musclegroups?.join('/')})</li>
+            ))}
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   handleGroupChange(e) {
     this.setState({groupChoice: e.target.value});
   }
@@ -50,22 +66,6 @@ class ExerciseTypeList extends React.Component {
     if (a.name.toLowerCase() < b.name.toLowerCase()) return -1;
     if (a.name.toLowerCase() > b.name.toLowerCase()) return 1;
     return 0;
-  }
-
-  render() {
-    const types = this.filterTypesByGroupChoice().sort(this.typeSortFunction);
-    return (
-      <div className='mt-2'>
-        {this.formatMuscleGroupDropdown()}
-        <div className='card'>
-          <div className='card-body'>
-            {types.map(t => (
-              <li key={t.name}>{t.name} ({t.musclegroups?.join('/')})</li>
-            ))}
-          </div>
-        </div>
-      </div>
-    );
   }
 }
 

@@ -51,7 +51,7 @@ class CreateExerciseType extends React.Component {
             </button>
           </div>
           <div className='col-auto mb-2'>
-            <label className='form-label'>Muscle Group(s)</label>
+            <label className='form-label'>Muscle Groups</label>
             {this.formatMuscleGroups(isCardio)}
           </div>
           <div className='d-grid mb-2'>
@@ -150,7 +150,7 @@ class CreateExerciseType extends React.Component {
         </div>
         {muscleGroups.length > 0 &&
           <div>
-            <label>Selected groups:</label>
+            <label>Selected Groups:</label>
             <input className='form-control mb-1 mt-1' type='text' readOnly disabled value={muscleGroups} />
           </div>}
       </div>
