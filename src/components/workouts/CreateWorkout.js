@@ -14,10 +14,11 @@ class CreateWorkout extends React.Component {
     this.handleChangeLocation = this.handleChangeLocation.bind(this);
     this.handleChangeLocationText = this.handleChangeLocationText.bind(this);
     this.handleSubmitWorkout = this.handleSubmitWorkout.bind(this);
-    this.locationInput = this.locationInput.bind(this);
+    this.handleAddLocationInput = this.handleAddLocationInput.bind(this);
     this.state = {
       date: moment(),
       location: '',
+      useGeolocation: false,
       locationComponent: <input
         type='text'
         className='form-control'
@@ -60,7 +61,9 @@ class CreateWorkout extends React.Component {
     const dateValue = moment(date).format('yyyy-MM-DD');
     const workouts = this.state.workouts ?? [];
     const exercises = this.state.exercises ?? [];
+    const isGeolocation = this.state.useGeolocation;
     const locationComponent = this.state.locationComponent;
+    const geolocationButtonText = `${(isGeolocation ? '- Remove' : '+ Add')} Geolocation`;
     return (
       <div>
         <div>
@@ -69,22 +72,31 @@ class CreateWorkout extends React.Component {
             <div className='card-body'>
               <div className='mb-2'>
                 <label className='form-label'>Workout Date:</label>
-                <input type='date' className='form-control' id='workoutDate' value={dateValue} onChange={this.handleDateChange} />
+                <input
+                  type='date'
+                  className='form-control'
+                  id='workoutDate'
+                  value={dateValue}
+                  onChange={this.handleDateChange}
+                />
               </div>
               <div className='mb-2'>
                 <label className='form-label'>Location:</label>
                 <button
                   id='addLocationButton'
                   className='btn btn-sm btn-outline-primary ms-1'
-                  onClick={this.locationInput}
+                  onClick={this.handleAddLocationInput}
                 >
-                  + Add Geolocation
+                  {geolocationButtonText}
                 </button>
                 {locationComponent}
               </div>
             </div>
           </div>
-          <CreateExercise onExercisesChange={this.handleExercisesChange} exercises={exercises} />
+          <CreateExercise
+            onExercisesChange={this.handleExercisesChange}
+            exercises={exercises}
+          />
           <div className='d-grid mt-2'>
             <button
               type='button'
@@ -150,9 +162,25 @@ class CreateWorkout extends React.Component {
     this.setState({exercises: exercises});
   }
 
-  locationInput() {
-    const button = document.querySelector('#addLocationButton');
-    button.setAttribute('disabled','');
+  handleAddLocationInput() {
+    const nowUseGeolocation = !this.state.useGeolocation;
+    if (nowUseGeolocation) {
+      this.locationInputGeolocation();
+    } else { this.locationInputSimple(); }
+    this.setState((state) => ({useGeolocation: !state.useGeolocation}));
+  }
+
+  locationInputSimple() {
+    this.setState({locationComponent: <input
+      type='text'
+      className='form-control'
+      id='workoutLocation'
+      onChange={this.handleChangeLocationText}
+      placeholder="Enter workout location (optional)"
+    />});
+  }
+
+  locationInputGeolocation() {
     if (navigator.geolocation) {
       return navigator.geolocation.getCurrentPosition(p => this.setState({
         locationComponent: <GooglePlacesAutocomplete
@@ -160,12 +188,14 @@ class CreateWorkout extends React.Component {
           id='workoutLocation'
           selectProps={{onChange: this.handleChangeLocation}}
           apiKey={process.env.REACT_APP_MAPS_APIKEY}
-          autocompletionRequest={{origin: {
-            lat: p.coords.latitude,
-            lng: p.coords.longitude
-          }}}
-        />
-      }));
+          autocompletionRequest={{
+            location: {
+              lat: p.coords.latitude,
+              lng: p.coords.longitude
+            },
+            radius: 8000
+          }}
+        />}));
     }
   }
 }
