@@ -132,24 +132,11 @@ class CreateWorkout extends React.Component {
 
   handleSubmitWorkout() {
     const isEdit = this.state.isEdit;
-    let newWorkout = null;
     if (isEdit) {
-      newWorkout = this.modifyWorkout();
+      this.modifyWorkout();
     } else {
-      newWorkout = this.addNewWorkout();
+      this.addNewWorkout();
     }
-    this.setState((state) => ({
-      workouts: [...state.workouts, newWorkout],
-      exercises: []
-    }));
-    confetti({
-      particleCount: 500,
-      spread: 70,
-      startVelocity: 65,
-      origin: {
-        y: 1
-      }
-    });
   }
 
   addNewWorkout() {
@@ -172,12 +159,23 @@ class CreateWorkout extends React.Component {
         newWorkout._id = result.data._id;
         this.props.onWorkoutSubmit()
       });
-    return newWorkout;
+    this.setState((state) => ({
+      workouts: [...state.workouts, newWorkout],
+      exercises: []
+    }));
+    confetti({
+      particleCount: 500,
+      spread: 70,
+      startVelocity: 65,
+      origin: {
+        y: 1
+      }
+    });
   }
 
   modifyWorkout() {
-    // get existing workout values
-    const existing = this.props.editWorkout;
+    // get existing workout id
+    const id = this.props.match?.params?.id;
     // create update data
     const username = localStorage.getItem('username');
     const date = this.state.date;
@@ -187,10 +185,18 @@ class CreateWorkout extends React.Component {
     if (!date) return alert('Please enter a valid date');
     const update = { username, date, location, locationData, exercises };
     // submit change to db
-    const url = `${process.env.REACT_APP_API_URL}api/workouts/update/${existing._id}`;
+    const url = `${process.env.REACT_APP_API_URL}api/workouts/update/${id}`;
     axios.post(url, update)
       .then(result => console.log(result))
       .catch(err => console.log(err));
+    confetti({
+      particleCount: 500,
+      spread: 70,
+      startVelocity: 65,
+      origin: {
+        y: 1
+      }
+    });
   }
 
   checkForEdit() {
