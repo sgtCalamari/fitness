@@ -16,6 +16,8 @@ class CreateWorkout extends React.Component {
     this.handleSubmitWorkout = this.handleSubmitWorkout.bind(this);
     this.handleAddLocationInput = this.handleAddLocationInput.bind(this);
     this.state = {
+      isEdit: false,
+      titleText: 'Log Workout',
       date: moment(),
       location: '',
       useGeolocation: false,
@@ -46,6 +48,15 @@ class CreateWorkout extends React.Component {
         localStorage.removeItem('unsavedExercises');
       }
     }
+    const workout = this.props.editWorkout;
+    if (workout) {
+      this.setState((state) => ({
+        titleText: 'Edit Workout',
+        date: workout.date ?? state.date,
+        location: workout.location ?? state.location,
+        exercises: workout.exercises ?? state.exercises
+      }));
+    }
   }
 
   componentWillUnmount() {
@@ -57,6 +68,7 @@ class CreateWorkout extends React.Component {
   }
 
   render() {
+    const titleText = this.state.titleText;
     const date = this.state.date; // yyyy-MM-DD for dateValue
     const dateValue = moment(date).format('yyyy-MM-DD');
     const workouts = this.state.workouts ?? [];
@@ -67,7 +79,7 @@ class CreateWorkout extends React.Component {
     return (
       <div>
         <div>
-          <h1>Log Workout</h1>
+          <h1>{titleText}</h1>
           <div className='card'>
             <div className='card-body'>
               <div className='mb-2'>
@@ -111,6 +123,28 @@ class CreateWorkout extends React.Component {
   }
 
   handleSubmitWorkout() {
+    const isEdit = this.state.isEdit;
+    let newWorkout = null;
+    if (isEdit) {
+      newWorkout = this.modifyWorkout();
+    } else {
+      newWorkout = this.addNewWorkout();
+    }
+    this.setState((state) => ({
+      workouts: [...state.workouts, newWorkout],
+      exercises: []
+    }));
+    confetti({
+      particleCount: 500,
+      spread: 70,
+      startVelocity: 65,
+      origin: {
+        y: 1
+      }
+    });
+  }
+
+  addNewWorkout() {
     // validate state workout values
     const username = localStorage.getItem('username');
     const date = this.state.date;
@@ -129,18 +163,27 @@ class CreateWorkout extends React.Component {
         newWorkout._id = result.data._id;
         this.props.onWorkoutSubmit()
       });
-    this.setState((state) => ({
-      workouts: [...state.workouts, newWorkout],
-      exercises: []
-    }));
-    confetti({
-      particleCount: 500,
-      spread: 70,
-      startVelocity: 65,
-      origin: {
-        y: 1
-      }
-    });
+    return newWorkout;
+  }
+
+  modifyWorkout() {
+    // get existing workout values
+    const existing = this.props.editWorkout;
+    // create update data
+    const username = localStorage.getItem('username');
+    const date = this.state.date;
+    const location = this.state.location;
+    const locationData = this.state.locationData;
+    const exercises = this.state.exercises ?? [];
+    if (!date) return alert('Please enter a valid date');
+    const update = { username, date, location, locationData, exercises };
+    // submit change to db
+    const authToken = JSON.parse(localStorage.getItem('auth')).token;
+    const config = {headers: {Authorization: authToken}};
+    const url = `${process.env.REACT_APP_API_URL}api/workouts/update/${existing._id}`;
+    axios.post(url, update, config)
+      .then(result => console.log(result))
+      .catch(err => console.log(err));
   }
 
   handleDateChange(e) {
@@ -186,8 +229,10 @@ class CreateWorkout extends React.Component {
         locationComponent: <GooglePlacesAutocomplete
           className='form-control'
           id='workoutLocation'
-          selectProps={{onChange: this.handleChangeLocation}}
           apiKey={process.env.REACT_APP_MAPS_APIKEY}
+          selectProps={{
+            onChange: this.handleChangeLocation
+          }}
           autocompletionRequest={{
             location: {
               lat: p.coords.latitude,
