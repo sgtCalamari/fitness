@@ -93,6 +93,14 @@ class CreateExercise extends React.Component {
       .catch(err => console.log(err));
   }
 
+  sortCaseInsensitive(a, b) {
+    const formatA = a.toLowerCase();
+    const formatB = b.toLowerCase();
+    if (formatA < formatB) return -1;
+    if (formatA > formatB) return 1;
+    return 0;
+  }
+
   formatExerciseTypeOptions(exerciseTypes) {
     const muscleGroupChoice = this.state.groupChoice;
     const filterFunc = (et)=> et.musclegroups.indexOf(muscleGroupChoice) !== -1;
@@ -101,7 +109,7 @@ class CreateExercise extends React.Component {
     }
     return exerciseTypes
       .map(et => et.name)
-      .sort()
+      .sort(this.sortCaseInsensitive)
       .map(et => (<option key={et}>{et}</option>));
   }
 
