@@ -23,14 +23,15 @@ router.post('/add', passport.authenticate('jwt', {session: false}), (req, res) =
     .catch(err => res.status(400).json('Error: ' + err));
 });
 
-router.get('/:username', passport.authenticate('jwt', {session: false}), (req, res) => {
-  Workout.find({username: req.params.username})
+router.get('/_:id', passport.authenticate('jwt', {session: false}), (req, res) => {
+  if (!req.params.id) { res.status(400).json('no id provided'); return; }
+  Workout.findById(req.params.id)
     .then(w => res.json(w))
     .catch(err => res.status(400).json('Error: ' + err));
 });
 
-router.get('/:id', passport.authenticate('jwt', {session: false}), (req, res) => {
-  Workout.findById(req.params.id)
+router.get('/:username', passport.authenticate('jwt', {session: false}), (req, res) => {
+  Workout.find({username: req.params.username})
     .then(w => res.json(w))
     .catch(err => res.status(400).json('Error: ' + err));
 });

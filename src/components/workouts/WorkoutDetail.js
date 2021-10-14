@@ -1,5 +1,6 @@
 import React from 'react';
 import axios from 'axios';
+import { Link } from 'react-router-dom';
 import ExerciseList from '../exercises/ExerciseList';
 
 class WorkoutDetail extends React.Component {
@@ -30,6 +31,8 @@ class WorkoutDetail extends React.Component {
     const locationTag = location ?
       (<span className="ms-1">@ {location}</span>) :
       null;
+    const id = this.props.id;
+    const editUrl = `/log/${id}`;
 
     return (
       <div onClick={showDiv ? null : this.handleClick}>
@@ -42,10 +45,15 @@ class WorkoutDetail extends React.Component {
               <b className='ms-1'>({muscleGroups})</b>
             </span>
           </p>
-          {showDiv && <button
-            className='btn btn-sm btn-outline-danger me-1'
-            onClick={this.areYouFuckingSure}
-          >x</button>}
+          <div>
+            {showDiv && <Link to={editUrl}><button
+              className='btn btn-sm btn-outline-primary me-1'
+            >Edit</button></Link>}
+            {showDiv && <button
+              className='btn btn-sm btn-outline-danger me-1'
+              onClick={this.areYouFuckingSure}
+            >x</button>}
+          </div>
         </div>
         {showDiv && <ExerciseList exercises={exercises} />}
       </div>
@@ -74,7 +82,7 @@ class WorkoutDetail extends React.Component {
       .join('/');
     const location = this.props.location ? ` @ ${this.props.location}` : null;
 
-    const confirmMessage = `You are about to delete ${date} ${location} (${muscleGroups})... are you sure?`;
+    const confirmMessage = `You are about to delete ${date} ${location ?? ''} (${muscleGroups})... are you sure?`;
     const userIsFuckingSure = window.confirm(confirmMessage);
     if (userIsFuckingSure) this.handleDelete();
     else console.log('CRISIS AVERTED! Carry on.');

@@ -1,4 +1,5 @@
 import React from 'react';
+import {withRouter} from 'react-router-dom';
 import GooglePlacesAutocomplete from 'react-google-places-autocomplete';
 import moment from 'moment';
 import axios from 'axios';
@@ -34,32 +35,15 @@ class CreateWorkout extends React.Component {
   }
 
   componentDidMount() {
-    const auth = localStorage.getItem('auth');
-    if (auth) {
-      axios.defaults.headers.common['Authorization'] = JSON.parse(auth)?.token;
-    }
-    const existing = localStorage.getItem('unsavedExercises');
-    if (existing) {
-      const message = "Found existing exercises that haven't been saved to a workout. Would you like to pick up where you left off?";
-      const loadExisting = window.confirm(message);
-      if (loadExisting) {
-        this.setState({exercises: JSON.parse(existing)});
-      } else {
-        localStorage.removeItem('unsavedExercises');
-      }
-    }
-    const workout = this.props.editWorkout;
-    if (workout) {
-      this.setState((state) => ({
-        titleText: 'Edit Workout',
-        date: workout.date ?? state.date,
-        location: workout.location ?? state.location,
-        exercises: workout.exercises ?? state.exercises
-      }));
-    }
+    this.applyAuthorizationHeader();
+    this.handleUnsavedExercises();
+    this.checkForEdit();
   }
 
   componentWillUnmount() {
+    const isEdit = this.state.isEdit;
+    if (isEdit) return;
+
     const exercises = this.state.exercises;
     if (exercises && exercises.length > 0) {
       console.log('setting unsaved exercises to local storage');
@@ -122,6 +106,30 @@ class CreateWorkout extends React.Component {
     );
   }
 
+  applyAuthorizationHeader() {
+    const auth = localStorage.getItem('auth');
+    if (auth) {
+      axios.defaults.headers.common['Authorization'] = JSON.parse(auth)?.token;
+    }
+  }
+
+  handleUnsavedExercises() {
+    const isEdit = this.props.editWorkout ??
+      this.props.match?.params?.id ??
+      false;
+    if (isEdit) return;
+    const existing = localStorage.getItem('unsavedExercises');
+    if (existing) {
+      const message = "Found existing exercises that haven't been saved to a workout. Would you like to pick up where you left off?";
+      const loadExisting = window.confirm(message);
+      if (loadExisting) {
+        this.setState({exercises: JSON.parse(existing)});
+      } else {
+        localStorage.removeItem('unsavedExercises');
+      }
+    }
+  }
+
   handleSubmitWorkout() {
     const isEdit = this.state.isEdit;
     let newWorkout = null;
@@ -158,7 +166,8 @@ class CreateWorkout extends React.Component {
     // submit workout to db
     const authToken = JSON.parse(localStorage.getItem('auth')).token;
     const config = {headers: {Authorization: authToken}};
-    axios.post(`${process.env.REACT_APP_API_URL}api/workouts/add`, newWorkout, config)
+    const url = `${process.env.REACT_APP_API_URL}api/workouts/add`;
+    axios.post(url, newWorkout, config)
       .then(result => {
         newWorkout._id = result.data._id;
         this.props.onWorkoutSubmit()
@@ -178,12 +187,38 @@ class CreateWorkout extends React.Component {
     if (!date) return alert('Please enter a valid date');
     const update = { username, date, location, locationData, exercises };
     // submit change to db
-    const authToken = JSON.parse(localStorage.getItem('auth')).token;
-    const config = {headers: {Authorization: authToken}};
     const url = `${process.env.REACT_APP_API_URL}api/workouts/update/${existing._id}`;
-    axios.post(url, update, config)
+    axios.post(url, update)
       .then(result => console.log(result))
       .catch(err => console.log(err));
+  }
+
+  checkForEdit() {
+    const id = this.props.match?.params?.id;
+    if (id) {
+      this.getWorkoutById(id);
+      return;
+    }
+    const workout = this.props.editWorkout;
+    if (workout) {
+      this.setState((state) => ({
+        titleText: 'Edit Workout',
+        date: workout.date ?? state.date,
+        location: workout.location ?? state.location,
+        exercises: workout.exercises ?? state.exercises
+      }));
+    }
+  }
+
+  getWorkoutById(id) {
+    const url = `${process.env.REACT_APP_API_URL}api/workouts/_${id}`;
+    axios.get(url).then(result => this.setState({
+      isEdit: true,
+      editWorkout: result.data,
+      titleText: 'Edit Workout',
+      date: result.data.date,
+      location: result.data.location,
+      exercises: result.data.exercises}));
   }
 
   handleDateChange(e) {
@@ -245,4 +280,4 @@ class CreateWorkout extends React.Component {
   }
 }
 
-export default CreateWorkout;
+export default withRouter(CreateWorkout);

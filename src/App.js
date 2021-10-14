@@ -1,7 +1,10 @@
 import React from 'react';
 import axios from 'axios';
 import ReactGA from 'react-ga';
-import { BrowserRouter as Router, Route } from 'react-router-dom';
+import {
+  BrowserRouter as Router,
+  Route
+} from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
 
@@ -19,43 +22,9 @@ class App extends React.Component {
     super(props);
     this.componentDidMount = this.componentDidMount.bind(this);
     this.state = {
+      editWorkout: {},
       workouts: []
     };
-  }
-
-  componentDidUpdate() {
-    ReactGA.initialize('UA-161551757-5');
-    ReactGA.pageview('/');
-  }
-
-  render() {
-    const workouts = this.state.workouts;
-    return (
-      <div style={{background:"url('/light-grey-terrazzo.png')",height:'100vh'}}>
-      <Router>
-        <div className="container-fluid">
-            <Navbar />
-            <GARoute><Route path='/login' component={UserLogin} /></GARoute>
-            <GARoute>
-              <PrivateRoute path='/' exact>
-                <WorkoutSummary workouts={workouts} />
-              </PrivateRoute>
-            </GARoute>
-            <GARoute>
-              <PrivateRoute path='/log' exact>
-                <CreateWorkout onWorkoutSubmit={this.componentDidMount} />
-              </PrivateRoute>
-            </GARoute>
-            <GARoute>
-              <PrivateRoute path='/exerciseTypes'>
-                <ExerciseTypeSummary />
-              </PrivateRoute>
-            </GARoute>
-            <Copyright />
-        </div>
-      </Router>
-      </div>
-    );
   }
 
   componentDidMount() {
@@ -69,6 +38,56 @@ class App extends React.Component {
         .then(response => this.setState({ workouts: response.data }))
         .catch(error => console.log(error));
     }
+  }
+
+  componentDidUpdate() {
+    ReactGA.initialize('UA-161551757-5');
+    ReactGA.pageview('/');
+  }
+
+  render() {
+    const workouts = this.state.workouts;
+    return (
+      <div style={{background:"url('/light-grey-terrazzo.png')",height:'100vh'}}>
+        <Router>
+          <div className="container-fluid">
+              <Navbar />
+              <GARoute><Route path='/login' component={UserLogin} /></GARoute>
+              <GARoute>
+                <PrivateRoute path='/' exact>
+                  <WorkoutSummary workouts={workouts} />
+                </PrivateRoute>
+              </GARoute>
+              <GARoute>
+                <PrivateRoute path='/log' exact>
+                  <CreateWorkout onWorkoutSubmit={this.componentDidMount} />
+                </PrivateRoute>
+              </GARoute>
+              {this.formatEditWorkout()}
+              <GARoute>
+                <PrivateRoute path='/exerciseTypes'>
+                  <ExerciseTypeSummary />
+                </PrivateRoute>
+              </GARoute>
+              <Copyright />
+          </div>
+        </Router>
+      </div>
+    );
+  }
+
+  formatEditWorkout() {
+    const id = this.props.match?.params?.id;
+    return (
+      <GARoute>
+        <PrivateRoute path='/log/:id' exact>
+          <CreateWorkout
+            onWorkoutSubmit={this.componentDidMount}
+            editWorkoutId={id}
+          />
+        </PrivateRoute>
+      </GARoute>
+    );
   }
 }
 
