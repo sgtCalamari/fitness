@@ -1,5 +1,6 @@
 import React from 'react';
 import axios from 'axios';
+import { Link } from 'react-router-dom';
 import ExerciseList from './ExerciseList';
 import CreateSet from  '../sets/CreateSet';
 
@@ -66,6 +67,7 @@ class CreateExercise extends React.Component {
                 disabled
                 value={muscleGroups}
               />
+              {this.formatHelpText()}
             </div>
             {selectValue !== 'default' &&
               <CreateSet
@@ -111,6 +113,14 @@ class CreateExercise extends React.Component {
       .map(et => et.name)
       .sort(this.sortCaseInsensitive)
       .map(et => (<option key={et}>{et}</option>));
+  }
+
+  formatHelpText() {
+    return (
+      <p className='mt-1'>
+        Can't find your exercise type? <Link to='/exerciseTypes'>Add it here!</Link>
+      </p>
+    );
   }
 
   lookupMuscleGroups(exerciseName) {
